@@ -1,11 +1,11 @@
 # SSD - Secure File System Storage
+**Goal:** Implementing a *secure* client/server file system storage
+
 **Technology:** 
 
  - Python (Flask)
  - PostgreSQL (Database)
- - 2-factor authentication: PyOTP (Only a suggestion, if you have a better idea please share)
-
-**Goal:** Implementing a *secure* client/server file system storage
+ - 2-factor authentication: PyOTP (Only a suggestion, if you have a better idea, please share)
 
 **Requirements:**
 
@@ -25,4 +25,3 @@
 - Administrator control panel (part of web application)
 - Notification system for both users & admins (for deletion requests...)
 - Server-side implementation (upload/download/delete operations)
-
