@@ -26,3 +26,5 @@
 - Notification system for both users & admins (for deletion requests...)
 - Server-side implementation (upload/download/delete operations)
 - Think about security measures (RSA, AES, password policies...)
+
+A link that will probably be useful: [Flask Mega Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
