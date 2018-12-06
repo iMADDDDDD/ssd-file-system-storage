@@ -1,5 +1,6 @@
 # SSD - Secure File System Storage
 **Technology:** Python (Flask)
+
 **Goal:** Implementing a *secure* client/server file system storage
 
 **Requirements:**
