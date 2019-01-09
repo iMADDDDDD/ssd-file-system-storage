@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Upload file</h1>
+    <form action="http://localhost:5000/deleter" method = "POST">
+        {{ form.hidden_tag() }}
+        {{ form.filename }}
+        {{ form.submit()}}
+    </form>
+{% endblock %}
