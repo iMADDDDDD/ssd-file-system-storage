@@ -7,6 +7,7 @@ from werkzeug import secure_filename
 from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm, DeletionForm
 
+
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -14,6 +15,7 @@ def index():
     user = current_user
     files = File.query.all()
     return render_template('index.html', title="Home", user=user, files=files)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -88,3 +90,11 @@ def deleter():
         else:
             return 'Error'
     return str(form.errors)
+
+@app.route('/content')
+@login_required
+def content():
+    user = current_user
+    files = File.query.all()
+    return render_template('content.html', title="Content", user=user, files=files)
+
