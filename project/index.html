@@ -11,7 +11,6 @@
 
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
-
 				<!-- Header -->
 					<header id="header" class="alt">
 						<h1><a href="index.html">Secure File Storage System</a></h1>
@@ -22,6 +21,12 @@
 									<div id="menu">
 										<ul>
 											<li><a href="index.html">Home</a></li>
+											<li>
+												<a href="{{ url_for('login') }}">Login</a>
+												{% else %}
+												<a href="{{ url_for('logout') }}">Logout</a>
+												{% endif %}
+											</li>
 										</ul>
 									</div>
 								</li>
@@ -33,16 +38,10 @@
 					<section id="banner">
 						<div class="inner">
 							<div>
-								Microblog:
 								<a href="{{ url_for('index') }}">Home</a>
 								{% if current_user.is_anonymous %}
-								<a href="{{ url_for('login') }}">Login</a>
-								{% else %}
-								<a href="{{ url_for('logout') }}">Logout</a>
-								{% endif %}
 							</div>
 						</div>
-						<a href="#one" class="more scrolly">Learn More</a>
 					</section>
 
 				<!-- CTA -->
