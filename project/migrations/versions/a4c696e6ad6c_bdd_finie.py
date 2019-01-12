@@ -1,8 +1,8 @@
 """BDD finie
 
-Revision ID: 2ef6d3fd1af6
+Revision ID: a4c696e6ad6c
 Revises: 
-Create Date: 2019-01-12 20:38:13.417168
+Create Date: 2019-01-12 20:41:37.258977
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2ef6d3fd1af6'
+revision = 'a4c696e6ad6c'
 down_revision = None
 branch_labels = None
 depends_on = None
