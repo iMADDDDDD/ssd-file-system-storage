@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>List of files</h1>
+
+<table style="width:100%">
+    <tr>
+        <th>File Name</th>
+        <th>Last Modification</th>
+        <th>Size</th>
+    </tr>
+    {%for file in files%}
+    <tr>
+        <th><a href=''>{{file.filename}}</a></th>
+        <th>{{file.timestamp.strftime("%Y-%m-%d %H:%M")}}</th>
+        <th>{{file.name}}</th>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
