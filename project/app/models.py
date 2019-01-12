@@ -9,6 +9,7 @@ class Role(enum.Enum):
     admin = 2
 
 class User(UserMixin, db.Model):
+    __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
@@ -29,6 +30,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.hashPassword, password)
 
 class Log(db.Model):
+    __tablename__ = 'Log'
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     userId = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
@@ -42,6 +44,7 @@ AccessFolder = db.Table('AccessFolder',
 )
 
 class Folder(db.Model):
+    __tablename__ = 'Folder'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(24))
     creationDate = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -59,6 +62,7 @@ AccessFile = db.Table('AccessFile',
 )
 
 class File(db.Model):
+    __tablename__ = 'File'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(24))
     path = db.Column(db.String(128))
