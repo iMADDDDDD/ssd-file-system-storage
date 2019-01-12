@@ -72,6 +72,23 @@ input, select, textarea {
 	appearance: none;
 }
 
+#button_upload{
+	text-align: right;
+	padding: 5px;
+	cursor:pointer;
+}
+
+
+#button_upload:hover{
+
+	color: rgba(255, 255, 255, 0.75);
+}
+
+#table_empty_row{
+	border:0px !important; 
+	background-color: none !important;
+}
+
 /* Basic */
 
 	@-ms-viewport {

@@ -9,8 +9,7 @@ from flask_fontawesome import FontAwesome
 
 app = Flask(__name__)
 Bootstrap(app)
-
-fa = FontAwesome(app)
+FontAwesome(app)
 
 app.config.from_object(Config)
 app.debug = True

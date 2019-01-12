@@ -4,6 +4,14 @@
 
 {% block content %}
     <h1>Hi, {{ user.username }}!</h1>
+    <div id="button_wrapper">
+        <a href="{{ url_for('upload') }}" >
+            <div id="button_upload" >
+
+                Upload <span class="fa fa-arrow-up"></span>
+            </div>
+        </a>
+    </div>
 
     <table class="table table-dark" >
             <thead>
@@ -12,28 +20,32 @@
                 <th scope="col">Filename</th>
                 <th scope="col">Last modified</th>
                 <th scope="col"></th>
-            
               </tr>
-    </thead>
+            </thead>
     <tbody>
-    {% for file in files %}
-      
-          <tr>
-          
-            {% if  len(files.user) %}
-                <span class="fa fa-folder"></span>
-            {% else %}
-                <span class="fa fa-folder-o"></span>
-            {% endif %}
-           
-           
-            <td>{{ file.filename }}</td>
-            <td>{{ file.author.username }}</td>
+        {% if files |count > 0 %}
+            {% for file in files %}
+                <tr>
+                    <td>
+                    {% if files.users |count > 0 %}
+                        <span class="fa fa-folder"></span>
+                    {% else %}
+                        <span class="fa fa-folder-o"></span>
+                    {% endif %}
+                    </td>
+                    <td>{{ file.filename }}</td>
+                    <td>{{ file.author.username }}</td>
+                    <td></td>
+                    <td style="text-align: center"><span class="fa fa-trash"></span></td>
+                </tr>
+            {% endfor %}
+        {% else %}
+        
+        <tr id="table_empty_row" style="background: none; border:0px;">
             <td></td>
-            <td style="text-align: center"><span class="fa fa-trash"></span></td>
-          </tr>
-     
-    {% endfor %}
+           <td>empty directory</td>
+        </tr>
+        {% endif %}
     </tbody>
     </table>
 {% endblock %}
