@@ -13,6 +13,7 @@ Bootstrap(app)
 fa = FontAwesome(app)
 
 app.config.from_object(Config)
+app.debug = True
 db = SQLAlchemy(app)
 app.debug = True
 

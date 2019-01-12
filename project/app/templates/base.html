@@ -47,6 +47,7 @@
 				<!-- CTA -->
 					<section id="cta" class="wrapper style4">
 						<div class="inner">
+<<<<<<< HEAD
 							<div style="width:100%">
 								{% with messages = get_flashed_messages() %}
 									{% if messages %}
@@ -59,6 +60,18 @@
 									{% endwith %}
 								{% block content %}{% endblock %}
 							</div>
+=======
+							{% with messages = get_flashed_messages() %}
+							{% if messages %}
+							<ul>
+								{% for message in messages %}
+								<li>{{ message }}</li>
+								{% endfor %}
+							</ul>
+							{% endif %}
+							{% endwith %}
+							{% block content %}{% endblock %}
+>>>>>>> 5e3a758ff947b5ceb07116de427f6a5b1551ced2
 						</div>
 					</section>
 

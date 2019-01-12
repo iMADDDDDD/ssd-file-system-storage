@@ -78,7 +78,7 @@ def delete():
 @app.route('/deleter', methods=['POST', 'GET'])
 def deleter():
     if not current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     form = DeletionForm()
     if form.validate_on_submit():
         f = File.query.filter_by(id=form.filename.data).first()
