@@ -2,7 +2,7 @@
 
 **Updates:**
 
-12/01/2019: added a project for security features / databse architecture
+12/01/2019: added a project for security features / database architecture
 
 ![alt text](https://github.com/iMADDDDDD/ssd-file-system-storage/blob/master/DataBase.jpg)
 
