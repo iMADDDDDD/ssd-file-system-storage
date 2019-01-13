@@ -2,6 +2,8 @@
 
 **Updates:**
 
+13/01/2019: added captcha security, session time out and email 
+email logs : autosecuremail@gmail.com  project2019secure
 12/01/2019: added a project for security features / database architecture
 
 ![alt text](https://github.com/iMADDDDDD/ssd-file-system-storage/blob/master/DataBase.jpg)
