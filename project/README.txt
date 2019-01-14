@@ -11,3 +11,5 @@ pip install flask_login
 pip install flask_wtf
 pip install flask_bootstrap
 pip install flask_fontawesome
+pip install flask_mail
+pip install pyjwt

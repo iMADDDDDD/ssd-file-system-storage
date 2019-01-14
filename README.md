@@ -3,7 +3,9 @@
 **Updates:**
 
 13/01/2019: added captcha security, session time out and email 
-email logs : autosecuremail@gmail.com  project2019secure
+email logs : autosecuremail@gmail.com /  project2019secure
+Reset password doesn't work yet, error 111 connection refused
+
 12/01/2019: added a project for security features / database architecture
 
 ![alt text](https://github.com/iMADDDDDD/ssd-file-system-storage/blob/master/DataBase.jpg)
