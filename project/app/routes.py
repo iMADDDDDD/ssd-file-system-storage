@@ -45,23 +45,23 @@ def login():
 
 @app.route('/logout')
 def logout():
-    if not session.get('logged_in'):
-        return render_template('login.html')
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
     logout_user()
     return redirect(url_for('index'))
 
 
 @app.route('/upload')
 def upload():
-    if not session.get('logged_in'):
-        return render_template('login.html')
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
     return render_template('upload.html')
 
 
 @app.route('/uploader', methods = ['POST'])
 def uploader():
-    if not session.get('logged_in'):
-        return render_template('login.html')
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
     if request.method == 'POST':
         f = request.files['file']
         f.save(secure_filename(f.filename))
@@ -90,8 +90,8 @@ def register():
 
 @app.route('/delete', methods=['GET', 'POST'])
 def delete():
-    if not session.get('logged_in'):
-        return render_template('login.html')
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = DeletionForm()
     form.filename.choices = [(int(f.id), f.filename) for f in User.query.filter_by(username='admin').first().files]
     return render_template('delete.html', title='Delete', form=form)
@@ -117,8 +117,8 @@ def deleter():
 @app.route('/content')
 @login_required
 def content():
-    if not session.get('logged_in'):
-        return render_template('login.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     user = current_user
     files = File.query.all()
     return render_template('content.html', title="Content", user=user, files=files)
@@ -126,8 +126,6 @@ def content():
 
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
