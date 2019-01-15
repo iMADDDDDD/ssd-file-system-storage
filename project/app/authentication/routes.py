@@ -1,7 +1,7 @@
 from app import app, db
 from app.models import User, File
 from app.authentication.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
-from app.email import send_password_reset_email
+from app.email import send_password_reset_email, send_confirmation_email
 import os
 from flask import render_template, redirect, url_for, flash, request, session
 from flask_login import current_user, login_user, logout_user, login_required
@@ -53,8 +53,8 @@ def register():
         return redirect(url_for('login'))
     return render_template('authentication/register.html', title='Register', form=form)
 
-@app.route('/register', methods=['GET'])
-def registereded():
+@app.route('/registered/<token>', methods=['GET'])
+def registered(token):
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     user = User.verify_reset_password_token(token)
