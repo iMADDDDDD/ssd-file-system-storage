@@ -19,12 +19,19 @@ FontAwesome(app)
 app.config.from_object(Config)
 mail = Mail(app)
 db = SQLAlchemy(app)
-
-
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
+
+from app.errors import bp as errors_bp
+app.register_blueprint(errors_bp)
+from app.authentication import bp as authentication_bp
+app.register_blueprint(authentication_bp)
+from app.fileModification import bp as fileModification_bp
+app.register_blueprint(fileModification_bp)
+
 from app import routes, models
+
 app.debug = False
 
 if not app.debug:

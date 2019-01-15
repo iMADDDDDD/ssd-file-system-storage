@@ -21,7 +21,7 @@
         <p>
             {{ form.recaptcha}}<br>
             {% for error in form.recaptcha.errors %}
-            <span style="color: red;">captcha needs to be filled</span>
+            <span style="color: red;">Captcha needs to be filled</span>
             {% endfor %}
         </p>
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
