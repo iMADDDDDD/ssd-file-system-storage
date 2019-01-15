@@ -24,10 +24,9 @@
 											<li><a href="{{ url_for('index') }}">Home</a></li> 
 											<!-- TODO check if href isn't bad because can be changed with javascript -->
 											{% if current_user.is_anonymous %}
-											<li><a href="{{ url_for('login') }}">Login</a></li>
+												<li><a href="{{ url_for('login') }}">Login</a></li>
 											{% else %}
-											<li><a href="{{ url_for('index') }}">List</a></li>
-											<li><a href="{{ url_for('logout') }}">Logout</a></li>
+												<li><a href="{{ url_for('logout') }}">Logout</a></li>
 											{% endif %}
 										</ul>
 									</div>

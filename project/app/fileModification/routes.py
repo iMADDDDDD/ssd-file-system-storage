@@ -1,6 +1,5 @@
 from app import app, db
-from app.models import User, File
-from app.fileModification.forms import DeletionForm
+from app.models import User, File, Folder
 from app.email import send_password_reset_email
 import os
 from flask import render_template, redirect, url_for, flash, request, session
@@ -9,15 +8,16 @@ from werkzeug.utils import secure_filename
 from werkzeug.urls import url_parse
 from datetime import timedelta
 from uuid import uuid4
+from app.routes import currentPath
 
 app.permanent_session_lifetime = timedelta(minutes=5)
 
 @app.route('/upload')
 @login_required
 def upload():
-    return render_template('upload.html')
+    return render_template('authenticated/upload.html')
 
-@app.route('/uploader', methods = ['POST'])
+@app.route('/uploader', methods = ['POST', 'GET'])
 @login_required
 def uploader():
     if request.method == 'POST':
@@ -28,26 +28,23 @@ def uploader():
         db.session.add(newfile)
         db.session.commit()
         flash('File uploaded successfully')
-        return render_template('upload.html')
+        return render_template('authenticated/upload.html')
 
-@app.route('/delete', methods=['GET', 'POST'])
+@app.route('/deleter/file/<id>', methods=['POST', 'GET'])
 @login_required
-def delete():
-    form = DeletionForm()
-    form.filename.choices = [(int(f.id), f.filename) for f in User.query.filter_by(username='admin').first().files]
-    return render_template('delete.html', title='Delete', form=form)
+def deleteFile(id):
+	f = File.query.filter_by(id=id).one()
+	print(f.parent.name)
+	db.session.delete(f)
+	db.session.commit()
+	flash(f.name + " has been delete correctly")
+	return redirect("index") + f.parent.name
 
-@app.route('/deleter', methods=['POST', 'GET'])
+@app.route('/deleter/folder/<id>', methods=['POST', 'GET'])
 @login_required
-def deleter():
-    form = DeletionForm()
-    if form.validate_on_submit():
-        f = File.query.filter_by(id=form.filename.data).first()
-        if os.path.exists(f.filename):
-            os.remove(f.filename)
-            db.session.delete(f)
-            db.session.commit()
-            return f.filename + " has been deleted correctly"
-        else:
-            return 'Error'
-    return str(form.errors)
+def deleteFolder(id):
+	f = Folder.query.filter_by(id=id).one()
+	db.session.delete(f)
+	db.session.commit()
+	flash(f.name + " has been delete correctly")
+	return redirect("index") + f.parent.name
