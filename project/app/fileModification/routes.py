@@ -1,6 +1,7 @@
 from app import app, db
 from app.models import User, File, Folder
 from app.email import send_password_reset_email
+from app.fileModification.forms import UploadForm
 import os
 from flask import render_template, redirect, url_for, flash, request, session
 from flask_login import current_user, login_user, logout_user, login_required
@@ -15,7 +16,20 @@ app.permanent_session_lifetime = timedelta(minutes=5)
 @app.route('/upload')
 @login_required
 def upload():
-    return render_template('authenticated/upload.html')
+        form = UploadForm()
+        return render_template('fileModification/upload.html', title='Upload Normal file', form=form)
+
+@app.route('/upload_normal')
+@login_required
+def upload_normal():
+        form = UploadForm()
+        return render_template('fileModification/upload_normal_file.html', title='Upload Normal file', form=form)
+
+@app.route('/upload_group')
+@login_required
+def upload_group():
+        form = UploadForm()
+        return render_template('fileModification/upload_group_file.html', title='Upload Group File', form=form)
 
 @app.route('/uploader', methods = ['POST', 'GET'])
 @login_required

@@ -32,12 +32,7 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        <p>
-            {{ form.recaptcha}}<br>
-            {% for error in form.recaptcha.errors %}
-            <span style="color: red;">captcha needs to be filled</span>
-            {% endfor %}
-        </p>
+
         <p>{{ form.submit() }}</p>
     </form>
 {% endblock %}
