@@ -1,0 +1,11 @@
+Dear {{ user.username }},
+
+To confirm your registration click on the following link:
+
+{{ url_for('registered', token=token, _external=True) }}
+
+If you didn't register on our website simply ignore this message.
+
+Sincerely,
+
+The Microblog Team
