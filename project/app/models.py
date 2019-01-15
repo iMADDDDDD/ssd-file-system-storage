@@ -10,6 +10,11 @@ import jwt
 class Role(enum.Enum):
     user = 1
     admin = 2
+    
+class JwtToken(db.Model):
+    __tablename__ = 'JwtToken'
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(142), index=True, unique=True)
 
 class User(UserMixin, db.Model):
     __tablename__ = 'User'
@@ -22,6 +27,7 @@ class User(UserMixin, db.Model):
     locked = db.Column(db.Boolean)
     failedLogin = db.Column(db.Integer, default=0)
     logs = db.relationship('Log', backref='user', lazy='dynamic')
+    confirmed = db.column(db.Boolean)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)

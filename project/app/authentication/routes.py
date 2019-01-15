@@ -17,6 +17,9 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
+        if not user.confirmed:
+            flash('Confirm your account before logging in')
+            return redirect(url_for('login'))
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
@@ -41,13 +44,26 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(username=form.username.data, email=form.email.data, confirmed=False)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!')
+        send_confirmation_email(user)
+        flash('Check your email for the instructions to confirm your registration')
         return redirect(url_for('login'))
     return render_template('authentication/register.html', title='Register', form=form)
+
+@app.route('/register', methods=['GET'])
+def registereded():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    user.confirmed = True
+    db.session.commit()
+    flash('Your registration has been confirmed')
+    return redirect(url_for('index'))
 
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
@@ -70,6 +86,8 @@ def reset_password(token):
     form = ResetPasswordForm()
     if form.validate_on_submit():
         user.set_password(form.password.data)
+        tk = JwtToken.query.filter(JwtToken.token == token).first()
+        db.session.delete(tk)
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('login'))
