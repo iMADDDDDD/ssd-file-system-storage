@@ -4,7 +4,54 @@
     <h1>Upload file</h1>
     <form action = "http://localhost:5000/uploader" method = "POST" 
     enctype = "multipart/form-data">
-        <input type = "file" name = "file" />
-        <input type = "submit"/>
+    <div style="display:flex">
+        <div style="width:50%">
+            <input type = "file" name = "file" />
+        </div>
+        <div style="width:50%">
+            <div id="group_file">
+                <h4>Add rights to your buddies</h4>
+                    {{ form.email(size=16) }}<br>
+                    <button id="add_rights" type="button">add</button>
+            </div>
+            <br>
+            <div id="share_file">
+                <h4>Share files with your buddies</h4>
+                    {{ form.email(size=16) }}<br>
+                <button id="add_share" type="button">add</button>
+            </div>
+        </div>
+    </div>
+    <div>
+            {{ form.submit()}}
+    </div>
     </form>
+
+
+    <script>
+           
+            group_check.addEventListener("change", show_group, false);
+            share_check.addEventListener("change", show_share, false);
+
+            function show_group(){
+                var isChecked = group_check.checked;
+                if(!isChecked){ 
+                    group.style.display="none";
+                }else{ 
+                    group.style.display="initial";
+                }       
+            }
+
+            function show_share(){
+                var isChecked = share_check.checked;
+                if(!isChecked){ 
+                    share.style.display="none";
+                }else{ 
+                    share.style.display="initial";
+                }    
+            }
+
+    </script>
+
+
 {% endblock %}
