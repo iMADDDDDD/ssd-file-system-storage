@@ -1,8 +1,8 @@
 """Premier essai
 
-Revision ID: 3a13b28d3b5a
+Revision ID: 591d9d0c4e95
 Revises: 
-Create Date: 2019-01-15 17:57:26.004135
+Create Date: 2019-01-15 17:59:22.801713
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3a13b28d3b5a'
+revision = '591d9d0c4e95'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,6 +27,12 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_Folder_creationDate'), 'Folder', ['creationDate'], unique=False)
+    op.create_table('JwtToken',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('token', sa.String(length=142), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_JwtToken_token'), 'JwtToken', ['token'], unique=True)
     op.create_table('User',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=64), nullable=True),
@@ -89,6 +95,8 @@ def downgrade():
     op.drop_index(op.f('ix_User_email'), table_name='User')
     op.drop_index(op.f('ix_User_creationDate'), table_name='User')
     op.drop_table('User')
+    op.drop_index(op.f('ix_JwtToken_token'), table_name='JwtToken')
+    op.drop_table('JwtToken')
     op.drop_index(op.f('ix_Folder_creationDate'), table_name='Folder')
     op.drop_table('Folder')
     # ### end Alembic commands ###
