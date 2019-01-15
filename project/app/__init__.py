@@ -15,10 +15,9 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 Bootstrap(app)
 FontAwesome(app)
-mail = Mail(app)
 
 app.config.from_object(Config)
-app.debug = True
+mail = Mail(app)
 db = SQLAlchemy(app)
 
 

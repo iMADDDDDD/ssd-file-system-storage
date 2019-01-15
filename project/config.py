@@ -9,7 +9,7 @@ class Config(object):
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
-    MAIL_USE_TLS = 1
+    MAIL_USE_TLS = True
     MAIL_USERNAME = 'autosecuremail@gmail.com'
     MAIL_PASSWORD = 'project2019secure'
     ADMINS = 'autosecuremail@gmail.com'
