@@ -1,21 +1,20 @@
-from app import app, db
-from app.models import User, File
-from app.fileModification.forms import DeletionForm
-from app.email import send_password_reset_email
-import os
-from flask import render_template, redirect, url_for, flash, request, session
-from flask_login import current_user, login_user, logout_user, login_required
-from werkzeug.utils import secure_filename
-from werkzeug.urls import url_parse
-from datetime import timedelta
-from uuid import uuid4
-
-app.permanent_session_lifetime = timedelta(minutes=5)
-
 @app.route('/upload')
 @login_required
 def upload():
-    return render_template('upload.html')
+        form = UploadForm()
+        return render_template('fileModification/upload.html', title='Upload Normal file', form=form)
+
+@app.route('/upload_normal')
+@login_required
+def upload_normal():
+        form = UploadForm()
+        return render_template('fileModification/upload_normal_file.html', title='Upload Normal file', form=form)
+
+@app.route('/upload_group')
+@login_required
+def upload_group():
+        form = UploadForm()
+        return render_template('fileModification/upload_group_file.html', title='Upload Group File', form=form)
 
 @app.route('/uploader', methods = ['POST'])
 @login_required
@@ -28,14 +27,14 @@ def uploader():
         db.session.add(newfile)
         db.session.commit()
         flash('File uploaded successfully')
-        return render_template('upload.html')
+        return render_template('index.html')
 
 @app.route('/delete', methods=['GET', 'POST'])
 @login_required
 def delete():
     form = DeletionForm()
     form.filename.choices = [(int(f.id), f.filename) for f in User.query.filter_by(username='admin').first().files]
-    return render_template('delete.html', title='Delete', form=form)
+    return render_template('fileModification/delete.html', title='Delete', form=form)
 
 @app.route('/deleter', methods=['POST', 'GET'])
 @login_required
