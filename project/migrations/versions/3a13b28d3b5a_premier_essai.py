@@ -1,8 +1,8 @@
-"""BDD finie
+"""Premier essai
 
-Revision ID: a4c696e6ad6c
+Revision ID: 3a13b28d3b5a
 Revises: 
-Create Date: 2019-01-12 20:41:37.258977
+Create Date: 2019-01-15 17:57:26.004135
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a4c696e6ad6c'
+revision = '3a13b28d3b5a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,7 +22,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=24), nullable=True),
     sa.Column('creationDate', sa.DateTime(), nullable=True),
-    sa.Column('folderId', sa.Integer(), nullable=False),
+    sa.Column('folderId', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['folderId'], ['Folder.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

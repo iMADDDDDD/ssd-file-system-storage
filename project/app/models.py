@@ -68,7 +68,7 @@ class Folder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(24))
     creationDate = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    folderId = db.Column(db.Integer, db.ForeignKey('Folder.id'), nullable=False)
+    folderId = db.Column(db.Integer, db.ForeignKey('Folder.id'))
     subFiles = db.relationship('File', backref='parent', lazy='dynamic')
     subFolders = db.relationship("Folder", remote_side=[id], backref='parent')
     AccessFolder = db.relationship('User', secondary=AccessFolder, lazy='dynamic',

@@ -13,3 +13,8 @@ pip install flask_bootstrap
 pip install flask_fontawesome
 pip install flask_mail
 pip install pyjwt
+
+
+To update database
+flask db migrate -m "Nom de ta migration"
+flask db upgrade
