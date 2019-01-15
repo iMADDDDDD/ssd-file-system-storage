@@ -18,32 +18,31 @@
               <tr>
                 <th scope="col"> </th>
                 <th scope="col">Filename</th>
-                <th scope="col">Last modified</th>
+                <th scope="col">Creation Date</th>
                 <th scope="col"></th>
               </tr>
             </thead>
     <tbody>
-        {% if files |count > 0 %}
+        {% if files %}
             {% for file in files %}
                 <tr>
                     <td>
-                    {% if files.users |count > 0 %}
-                        <span class="fa fa-folder"></span>
-                    {% else %}
+                    {% if file.path %}
                         <span class="fa fa-folder-o"></span>
+                    {% else %}
+                        <span class="fa fa-folder"></span>
                     {% endif %}
                     </td>
-                    <td>{{ file.filename }}</td>
-                    <td>{{ file.author.username }}</td>
-                    <td></td>
-                    <td style="text-align: center"><span class="fa fa-trash"></span></td>
+                    <td>{{ file.name }}</td>
+                    <td>{{ file.creationDate }}</td>
+                    <td style="text-align: center"><a href="{{ url_for('delete') }}/{{file.id}}"><span class="fa fa-trash"></span></a></td>
                 </tr>
             {% endfor %}
         {% else %}
         
         <tr id="table_empty_row" style="background: none; border:0px;">
             <td></td>
-           <td>empty directory</td>
+           <td>Empty directory</td>
         </tr>
         {% endif %}
     </tbody>
