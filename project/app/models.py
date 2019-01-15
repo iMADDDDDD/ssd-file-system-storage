@@ -27,7 +27,7 @@ class User(UserMixin, db.Model):
     locked = db.Column(db.Boolean)
     failedLogin = db.Column(db.Integer, default=0)
     logs = db.relationship('Log', backref='user', lazy='dynamic')
-    confirmed = db.column(db.Boolean)
+    confirmed = db.Column(db.Boolean)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
