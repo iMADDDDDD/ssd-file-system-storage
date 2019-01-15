@@ -48,6 +48,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
+        send_confirmation_email(user)
         flash('Check your email for the instructions to confirm your registration')
         return redirect(url_for('login'))
     return render_template('authentication/register.html', title='Register', form=form)
@@ -61,6 +62,7 @@ def registereded():
         return redirect(url_for('index'))
     user.confirmed = True
     db.session.commit()
+    flash('Your registration has been confirmed')
     return redirect(url_for('index'))
 
 @app.route('/reset_password_request', methods=['GET', 'POST'])
