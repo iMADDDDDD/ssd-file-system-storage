@@ -35,14 +35,15 @@ def currentPath(path):
     indexToSuppress = []
     for i in range(len(folders)):
         f = folders[i]
-        if f.parent[0].name != path:
+        if f.parent.name != path:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
         folders.pop(indexToSuppress[i] - i)
     if form.validate_on_submit():
         parent = Folder.query.filter_by(name=path).first()
         print(parent)
-        newFolder = Folder(name=form.folderName.data, parent=[parent])
+        newFolder = Folder(name=form.folderName.data, parent=parent)
+        newFolder.AccessFolder.append(user)
         db.session.add(newFolder)
         db.session.commit()
         return redirect(url_for("currentPath", path=parent.name))
