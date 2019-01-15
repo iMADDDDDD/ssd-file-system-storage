@@ -11,7 +11,6 @@ class Role(enum.Enum):
     user = 1
     admin = 2
 
-
 class User(UserMixin, db.Model):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
