@@ -9,6 +9,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.urls import url_parse
 from datetime import timedelta
 from uuid import uuid4
+from io import BytesIO
+import pyqrcode
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -22,6 +24,9 @@ def login():
             return redirect(url_for('login'))
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
+            return redirect(url_for('login'))
+        if user is None or not user.verify_totp(form.token.data):
+            flash('Invalid token')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         session['logged_in'] = True
@@ -48,9 +53,9 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        send_confirmation_email(user)
-        flash('Check your email for the instructions to confirm your registration')
-        return redirect(url_for('login'))
+
+        session['username'] = user.username
+        return redirect(url_for('two_factor_setup'))
     return render_template('authentication/register.html', title='Register', form=form)
 
 @app.route('/registered/<token>', methods=['GET'])
@@ -92,3 +97,38 @@ def reset_password(token):
         flash('Your password has been reset.')
         return redirect(url_for('login'))
     return render_template('authentication/reset_password.html', form=form)
+
+@app.route('/twofactor')
+def two_factor_setup():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    user = User.query.filter_by(username=session['username']).first()
+    if user is None:
+        return redirect(url_for('index'))
+
+    return render_template('authentication/two_factor_setup.html'), 200, {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'}
+
+@app.route('/qrcode')
+def qrcode():
+    if 'username' not in session:
+        abort(404)
+    user = User.query.filter_by(username=session['username']).first()
+
+    if user is None:
+        abort(404)
+
+    del session['username']
+
+    url = pyqrcode.create(user.get_totp_uri())
+    stream = BytesIO()
+    url.svg(stream, scale=5)
+
+    send_confirmation_email(user)
+    return stream.getvalue(), 200, {
+        'Content-Type': 'image/svg+xml',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'}
