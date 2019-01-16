@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Two Factor Authentication Setup</h1>
+  <p>You are almost done! Please start Google FreeOTP authenticator and scan the following QR code with it:</p>
+  <p><img id="qrcode" src="{{ url_for('qrcode') }}"></p>
+  <hr>
+  <p>Please also confirm your e-mail!</p>
+  <p>I'm done! Take me to the <a href="{{ url_for('login') }}">login</a> page!</p>
+{% endblock %}
