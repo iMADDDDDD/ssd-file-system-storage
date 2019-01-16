@@ -1,4 +1,7 @@
 import enum
+import os
+import base64
+import onetimepass
 from datetime import datetime
 from app import app, db, login
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,7 +13,7 @@ import jwt
 class Role(enum.Enum):
     user = 1
     admin = 2
-    
+
 class JwtToken(db.Model):
     __tablename__ = 'JwtToken'
     id = db.Column(db.Integer, primary_key=True)
@@ -28,10 +31,22 @@ class User(UserMixin, db.Model):
     failedLogin = db.Column(db.Integer, default=0)
     logs = db.relationship('Log', backref='user', lazy='dynamic')
     confirmed = db.Column(db.Boolean)
+    otp_secret = db.Column(db.String(16))
+
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        if self.otp_secret is None:
+            self.otp_secret = base64.b32encode(os.urandom(10)).decode('utf-8')
+
+    def get_totp_uri(self):
+        return 'otpauth://totp/ssd-file-system-storage:{0}?secret={1}&issuer=ssd-file-system-storage'.format(self.username, self.otp_secret)
+
+    def verify_totp(self, token):
+        return onetimepass.valid_totp(token, self.otp_secret)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
-    
+
     def set_password(self, password):
         self.hashPassword = generate_password_hash(password)
 
