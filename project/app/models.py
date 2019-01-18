@@ -42,7 +42,7 @@ class User(UserMixin, db.Model):
             self.otp_secret = base64.b32encode(os.urandom(10)).decode('utf-8')
 
     def get_totp_uri(self):
-        return 'otpauth://totp/ssd-file-system-storage:{0}?secret={1}&issuer=ssd-file-system-storage'.format(self.username, self.otp_secret)
+        return 'otpauth://totp/file-system-storage:{0}?secret={1}&issuer=file-system-storage'.format(self.username, self.otp_secret)
 
     def verify_totp(self, token):
         return onetimepass.valid_totp(token, self.otp_secret)
