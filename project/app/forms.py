@@ -4,6 +4,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Selec
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from app.models import User
 
+
 class CreateFolder(FlaskForm):
     folderName = StringField('Folder name', validators=[DataRequired()])
     submit = SubmitField('New Folder')

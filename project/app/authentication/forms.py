@@ -4,11 +4,14 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Selec
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from app.models import User
 
+
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), validators.Length(min=4, max=50)])
+    username = StringField('Username', validators=[DataRequired(),
+                                                   validators.Length(min=4, max=50)])
     password = PasswordField('Password', validators=[DataRequired()])
-    #recaptcha = RecaptchaField()
-    token = StringField('Token', validators=[DataRequired(), validators.Length(min=6, max=6)])
+    recaptcha = RecaptchaField()
+    token = StringField('Token', validators=[DataRequired(),
+                                             validators.Length(min=6, max=6)])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
@@ -16,10 +19,11 @@ class LoginForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired(), validators.Length(min=12, message="The password must have at least 12 characters")])
-    password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    #recaptcha = RecaptchaField()
+    password = PasswordField('Password', validators=[DataRequired(),
+                                                     validators.Length(min=12, message="The password must have at least 12 characters")])
+    confirm = PasswordField(
+        'Repeat Password', validators=[DataRequired(), EqualTo('confirm')])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -32,12 +36,14 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
+
 class ResetPasswordRequestForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Request Password Reset')
 
+
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    confirm = PasswordField(
+        'Repeat Password', validators=[DataRequired(), EqualTo('confirm')])
     submit = SubmitField('Request Password Reset')

@@ -2,22 +2,25 @@ import enum
 import os
 import base64
 import onetimepass
+import jwt
+
 from datetime import datetime
 from app import app, db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from time import time
-import jwt
 
 
 class Role(enum.Enum):
     user = 1
     admin = 2
 
+
 class JwtToken(db.Model):
     __tablename__ = 'JwtToken'
     id = db.Column(db.Integer, primary_key=True)
     token = db.Column(db.String(142), index=True, unique=True)
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'User'
@@ -79,9 +82,11 @@ class Log(db.Model):
 
 
 AccessFolder = db.Table('AccessFolder',
-    db.Column('userId', db.Integer, db.ForeignKey('User.id'), primary_key=True),
-    db.Column('folderId', db.Integer, db.ForeignKey('Folder.id'), primary_key=True)
-)
+                        db.Column('userId', db.Integer, db.ForeignKey(
+                            'User.id'), primary_key=True),
+                        db.Column('folderId', db.Integer, db.ForeignKey(
+                            'Folder.id'), primary_key=True)
+                        )
 
 
 class Folder(db.Model):
@@ -93,16 +98,18 @@ class Folder(db.Model):
     subFiles = db.relationship('File', backref='parent', lazy='dynamic')
     parent = db.relationship("Folder", remote_side=[id], backref='subFolders')
     AccessFolder = db.relationship('User', secondary=AccessFolder, lazy='dynamic',
-        backref=db.backref('folders', lazy=True))
+                                   backref=db.backref('folders', lazy=True))
 
     def __repr__(self):
         return '<Folder {}>'.format(self.name)
 
 
 AccessFile = db.Table('AccessFile',
-    db.Column('userId', db.Integer, db.ForeignKey('User.id'), primary_key=True),
-    db.Column('fileId', db.Integer, db.ForeignKey('File.id'), primary_key=True)
-)
+                      db.Column('userId', db.Integer, db.ForeignKey(
+                          'User.id'), primary_key=True),
+                      db.Column('fileId', db.Integer, db.ForeignKey(
+                          'File.id'), primary_key=True)
+                      )
 
 
 class File(db.Model):
@@ -111,10 +118,11 @@ class File(db.Model):
     name = db.Column(db.String(24))
     path = db.Column(db.String(128))
     size = db.Column(db.Integer)
-    folderId = db.Column(db.Integer, db.ForeignKey('Folder.id'), nullable=False)
+    folderId = db.Column(db.Integer, db.ForeignKey(
+        'Folder.id'), nullable=False)
     creationDate = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     AccessFile = db.relationship('User', secondary=AccessFile, lazy='dynamic',
-        backref=db.backref('files', lazy=True))
+                                 backref=db.backref('files', lazy=True))
 
     def __repr__(self):
         return '<File {}>'.format(self.name)

@@ -1,7 +1,8 @@
+import os
+
 from app import app, db
 from app.models import User, File, Folder
 from app.email import send_password_reset_email
-import os
 from app.forms import CreateFolder
 from flask import render_template, redirect, url_for, flash, request, session
 from flask_login import current_user, login_user, logout_user, login_required
@@ -12,11 +13,13 @@ from uuid import uuid4
 
 app.permanent_session_lifetime = timedelta(minutes=5)
 
+
 @app.route('/')
 @app.route('/index', methods=['POST', 'GET'])
 @login_required
 def index():
     return redirect(url_for("currentPath", path="Files"))
+
 
 @app.route('/index/<path>', methods=['POST', 'GET'])
 @login_required

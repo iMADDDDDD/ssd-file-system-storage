@@ -1,8 +1,10 @@
+import pyqrcode
+import os
+
 from app import app, db
 from app.models import User, File, JwtToken
 from app.authentication.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.email import send_password_reset_email, send_confirmation_email
-import os
 from flask import render_template, redirect, url_for, flash, request, session
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.utils import secure_filename
@@ -10,11 +12,10 @@ from werkzeug.urls import url_parse
 from datetime import timedelta
 from uuid import uuid4
 from io import BytesIO
-import pyqrcode
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
@@ -46,11 +47,13 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data, confirmed=False)
+        user = User(username=form.username.data,
+                    email=form.email.data, confirmed=False)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -58,6 +61,7 @@ def register():
         session['username'] = user.username
         return redirect(url_for('two_factor_setup'))
     return render_template('authentication/register.html', title='Register', form=form)
+
 
 @app.route('/registered/<token>', methods=['GET'])
 def registered(token):
@@ -71,6 +75,7 @@ def registered(token):
     flash('Your registration has been confirmed')
     return redirect(url_for('index'))
 
+
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     form = ResetPasswordRequestForm()
@@ -80,7 +85,8 @@ def reset_password_request():
             send_password_reset_email(user)
         flash('Check your email for the instructions to reset your password')
         return redirect(url_for('login'))
-    return render_template('authentication/reset_password_request.html',title='Reset Password', form=form)
+    return render_template('authentication/reset_password_request.html', title='Reset Password', form=form)
+
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
@@ -99,6 +105,7 @@ def reset_password(token):
         return redirect(url_for('login'))
     return render_template('authentication/reset_password.html', form=form)
 
+
 @app.route('/twofactor')
 def two_factor_setup():
     if 'username' not in session:
@@ -111,6 +118,7 @@ def two_factor_setup():
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
         'Expires': '0'}
+
 
 @app.route('/qrcode')
 def qrcode():

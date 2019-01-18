@@ -11,4 +11,3 @@ def content():
     user = current_user
     files = File.query.all()
     return render_template('content.html', title="Content", user=user, files=files)
-
