@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from app.models import User
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired(), validators.Length(min=4, max=50)])
     password = PasswordField('Password', validators=[DataRequired()])
     #recaptcha = RecaptchaField()
     token = StringField('Token', validators=[DataRequired(), validators.Length(min=6, max=6)])
@@ -16,7 +16,7 @@ class LoginForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), validators.Length(min=12, message="The password must have at least 12 characters")])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
     #recaptcha = RecaptchaField()
