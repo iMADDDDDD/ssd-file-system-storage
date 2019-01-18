@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User, File
+from app.models import User, File, JwtToken
 from app.authentication.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.email import send_password_reset_email, send_confirmation_email
 import os

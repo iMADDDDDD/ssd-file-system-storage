@@ -19,10 +19,11 @@ def upload():
         form = UploadForm()
         return render_template('fileModification/upload.html', title='Upload Normal file', form=form)
 
-@app.route('/upload_normal')
+@app.route('/upload_normal',methods = ['POST'])
 @login_required
 def upload_normal():
         form = UploadForm()
+        print(request)
         return render_template('fileModification/upload_normal_file.html', title='Upload Normal file', form=form)
 
 @app.route('/upload_group')
