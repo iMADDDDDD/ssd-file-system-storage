@@ -9,7 +9,7 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(),
                                                    validators.Length(min=4, max=50)])
     password = PasswordField('Password', validators=[DataRequired()])
-    recaptcha = RecaptchaField()
+    #recaptcha = RecaptchaField()
     token = StringField('Token', validators=[DataRequired(),
                                              validators.Length(min=6, max=6)])
     remember_me = BooleanField('Remember Me')
@@ -23,7 +23,7 @@ class RegistrationForm(FlaskForm):
                                                      validators.Length(min=12, message="The password must have at least 12 characters")])
     confirm = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('confirm')])
-    recaptcha = RecaptchaField()
+    #recaptcha = RecaptchaField()
     submit = SubmitField('Register')
 
     def validate_username(self, username):
