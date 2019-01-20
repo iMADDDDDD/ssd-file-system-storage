@@ -70,7 +70,7 @@ def deleteFile(id):
     print(f.parent.name)
     db.session.delete(f)
     db.session.commit()
-    filePath = returnPathOfFile(id) + "/" + f.name
+    filePath = returnPathOfFile(id)
     os.remove(filePath)
     flash(f.name + " has been delete correctly")
     return redirect(url_for("currentPath", path=f.parent.name))
@@ -80,13 +80,13 @@ def deleteFile(id):
 @login_required
 def deleteFolder(id):
     f = Folder.query.filter_by(id=id).one()
-    db.session.delete(f)
     for subf in f.subFolders:
         deleteFolder(subf.id)
     for subf in f.subFiles:
         deleteFile(subf.id)
-    folderPath = returnPathOfFolder(id) + "/" + f.name
+    folderPath = returnPathOfFolder(id)
     os.rmdir(folderPath)
+    db.session.delete(f)
     db.session.commit()
     flash(f.name + " has been delete correctly")
     return redirect(url_for("currentPath", path=f.parent.name))

@@ -1,6 +1,7 @@
 import os
 import sys
-
+from copy import deepcopy
+from app.functions.path import returnPathOfFile, returnPathOfFolder
 from app import app, db
 from app.models import User, File, Folder, Role
 from app.email import send_password_reset_email
@@ -89,26 +90,24 @@ def users():
 def currentPath(path):
     form = CreateFolder()
     user = User.query.get(current_user.id)
-    files = user.files
+    files = deepcopy(user.files)
     indexToSuppress = []
     currentFolder = Folder.query.filter_by(name=path).first()
-    for i in range(len(files)):
-        f = files[i]
+    for i in range(len(user.files)):
+        f = user.files[i]
         if f.parent.name != path:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
         files.pop(indexToSuppress[i] - i)
-    folders = user.folders
+    folders = deepcopy(user.folders)
     indexToSuppress = []
-    for i in range(len(folders)):
-        f = folders[i]
+    for i in range(len(user.folders)):
+        f = user.folders[i]
         if f.parent.name != path:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
         folders.pop(indexToSuppress[i] - i)
     if form.validate_on_submit():
-        # Create target Directory if don't exist
-
         dirName = os.path.abspath(currentFolder.name) + "/" + form.folderName.name
         if not os.path.exists(dirName):
             os.mkdir(dirName)
