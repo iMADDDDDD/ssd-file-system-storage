@@ -1,5 +1,6 @@
 import os
 import sys
+from copy import deepcopy
 from app.functions.path import returnPathOfFile, returnPathOfFolder
 from app import app, db
 from app.models import User, File, Folder, Role
@@ -41,19 +42,19 @@ def admin():
 def currentPath(path):
     form = CreateFolder()
     user = User.query.get(current_user.id)
-    files = user.files
+    files = deepcopy(user.files)
     indexToSuppress = []
     currentFolder = Folder.query.filter_by(name=path).first()
-    for i in range(len(files)):
-        f = files[i]
+    for i in range(len(user.files)):
+        f = user.files[i]
         if f.parent.name != path:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
         files.pop(indexToSuppress[i] - i)
-    folders = user.folders
+    folders = deepcopy(user.folders)
     indexToSuppress = []
-    for i in range(len(folders)):
-        f = folders[i]
+    for i in range(len(user.folders)):
+        f = user.folders[i]
         if f.parent.name != path:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
@@ -67,7 +68,7 @@ def currentPath(path):
             flash("Directory " + form.folderName.data + " already exists")
             return redirect(url_for("currentPath", title="Home", path=currentFolder.name))
         newFolder = Folder(name=form.folderName.data, parent=currentFolder)
-        newFolder.AccessFolder.append()
+        newFolder.AccessFolder.append(user)
         db.session.add(newFolder)
         db.session.commit()
         return redirect(url_for("currentPath", title="Home", path=currentFolder.name))
