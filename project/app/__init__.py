@@ -49,3 +49,7 @@ if not app.debug:
             credentials=auth, secure=secure)
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
+
+if __name__ == "__main__":
+	app.run(ssl_context=('cert.pem', 'key.pem'))
+

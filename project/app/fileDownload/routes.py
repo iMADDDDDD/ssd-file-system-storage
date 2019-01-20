@@ -16,37 +16,11 @@ from app.routes import currentPath
 from pytransmit import FTPClient
 
 
-@app.route('/connectFTP')
+@app.route('/download/<fileId>')
 @login_required
-def connectFTP():
-	ftp_obj = FTPClient()
-
-	if request.headers.getlist("X-Forwarded-For"):
-	       ip_client = request.headers.getlist("X-Forwarded-For")[0]
-	    else:
-	       ip_client = request.remote_addr
-
-	# FTP Details
-	FTP_HOST = socket.gethostbyname(socket.gethostname())
-	FTP_USER = ip_client
-	FTP_PASS = ""
-	FTP_PORT = 21
-
-	ftp_obj.connect(FTP_HOST, FTP_USER, FTP_PASS, FTP_PORT)
-	print(ftp_obj.get_message())
-
-@app.route('/upload_normal')
-@login_required
-def upload_normal():
-        srv = pysftp.Connection(host="your_FTP_server", username="your_username",
-	password="your_password")
-
-	# Get the directory and file listing
-	data = srv.listdir()
-
-	# Closes the connection
-	srv.close()
-
-	# Prints out the directories and files, line by line
-	for i in data:
-	    print i
+def download(itemType, itemId):
+	if not current_user.is_authenticated:
+        	return redirect(url_for('index'))
+	verification = 
+	if 
+	
