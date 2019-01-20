@@ -1,8 +1,10 @@
 from app import app, db
 from app.functions.path import returnPathOfFile, returnDirectoryOfFile, returnPathOfFolder
 from app.models import User, File, Folder
-from flask import render_template, redirect, url_for, flash, send_from_directory
+from flask import render_template, redirect, url_for, flash, send_from_directory, send_file
 from flask_login import current_user, login_required
+from cryptography.fernet import Fernet
+
 import zipfile
 import io
 import os
@@ -16,7 +18,15 @@ def downloadFile(itemID):
    if current_user.id in [user.id for user in fileD.AccessFile]:
       flash(fileD.name + " has been succesfuly downloaded")
       print(path, fileD.name)
-      return send_from_directory(directory=path, filename=fileD.name, as_attachment = True)
+      
+      with open(os.path.join(path,fileD.name), 'rb') as f:
+         data = f.read()
+
+      fernet = Fernet(app.config["EKEY"])
+
+      decrypted = fernet.decrypt(data)
+      
+      return send_file(io.BytesIO(decrypted), as_attachment = True, attachment_filename=fileD.name)
    else:
       flash("Access denied!")
       return redirect(url_for('index'))
@@ -36,24 +46,17 @@ def downloadFolder(itemID):
         flash("Access denied!")
         return redirect(url_for('index'))
 
-
 def recAddToZip(zipFile, itemId):
    files = File.query.filter_by(folderId=itemId)
    for f in files:
       if current_user in f.AccessFile and f.AccessFile.count() == 1:
          path = returnPathOfFolder(itemId)
-         zipFile.write(filename=os.path.join(path, f.name), arcname=f.name, compress_type=zipFile.compression)
+         with open(os.path.join(path,f.name), 'rb') as f:
+            data = f.read()
+         fernet = Fernet(app.config["EKEY"])
+         decrypted = fernet.decrypt(data)
+         
+         zipFile.writestr(f.name, decrypted, compress_type=zipFile.compression)
    folder = Folder.query.get(itemId)
    for f in folder.subFolders:
       recAddToZip(zipFile, f.id) 
-
-
-
-
-
-
-
-
-
-
-

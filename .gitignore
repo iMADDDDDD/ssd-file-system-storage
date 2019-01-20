@@ -1,8 +1,6 @@
 **/__pycache__
 **/venv
 **/.idea
-app.db
-migrations/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
