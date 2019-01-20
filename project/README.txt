@@ -19,6 +19,11 @@ pip install pysftp
 pip install pytransmit
 pip install flask_uploads
 
+To create the database
+flask db init
+flask db migrate -m "Nom de la migration"
+flask db upgrade
+
 To update database
 flask db migrate -m "Nom de ta migration"
 flask db upgrade
