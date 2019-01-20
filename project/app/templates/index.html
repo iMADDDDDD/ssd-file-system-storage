@@ -15,12 +15,12 @@
             {{ form.hidden_tag() }}
             <p>
                 {{ form.folderName.label }}<br>
-                {{ form.folderName }}<br>
+                {{ form.folderName }}
                 {% for error in form.folderName.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </p>
-            <p>{{ form.submit() }}</p>
+            <p style="text-align:right">{{ form.submit() }}</p>
     </form>
     <table class="table table-dark" >
             <thead>
@@ -39,7 +39,7 @@
                         <td><span class="fa fa-folder"></span></td>
                         <td><a href="{{ url_for('index') }}/{{ folder.name }}">{{ folder.name }}</a></td>
                         <td>{{ folder.creationDate.strftime('%d-%m-%Y') }}</td>
-                        <td style="text-align: center"><a href="{{ url_for('deleteFolder', id=folder.id) }}"><span class="fa fa-trash"></span></a></td>
+                        <td style="text-align: center"><a class="noDecoration" href="{{ url_for('deleteFolder', id=folder.id) }}"><span class="fa fa-trash"></span></a></td>
                     </tr>
                 {% endfor %}
             {% endif %}
@@ -49,7 +49,7 @@
                         <td><span class="fa fa-file"></span></td>
                         <td>{{ file.name }}</td>
                         <td>{{ file.creationDate.strftime('%d-%m-%Y') }}</td>
-                        <td style="text-align: center"><a href="{{ url_for('deleteFile', id=file.id) }}"><span class="fa fa-trash"></span></a></td>
+                        <td style="text-align: center"><a class="noDecoration" href="{{ url_for('deleteFile', id=file.id) }}"><span class="fa fa-trash"></span></a></td>
                     </tr>
                 {% endfor %}
             {% endif %}
