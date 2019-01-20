@@ -26,6 +26,14 @@
           <span style="color: red;">[{{ error }}]</span>
           {% endfor %}
         </p>
+        
+        <p>
+            {{ form.recaptcha.label }}<br>
+            {{ form.recaptcha(size=32)}}<br>
+            {% for error in form.recaptcha.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
 
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>{{ form.submit() }}</p>

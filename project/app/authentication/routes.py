@@ -29,6 +29,9 @@ def login():
         if user.locked:
             flash("Your account has been locked.\n Please wait for the asministrator to unlock your account")
             return redirect(url_for('login'))
+        if user.id != 1 and not user.activated:
+            flash("Please wait for the administrator to activate your account")
+            return redirect(url_for("login"))
         if not user.check_password(form.password.data):
             user.failedLogin += 1
             if user.failedLogin >= 3:

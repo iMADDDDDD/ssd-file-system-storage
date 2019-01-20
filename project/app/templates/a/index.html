@@ -26,5 +26,9 @@
   {% endif %}
 
   <a href="{{ url_for('users')}}" class="button primary small">View all users</a></li>
-
+  <a href="{{ url_for('logout') }}" >
+    <div id="button_upload" >
+        Logout <span class="fa fa-arrow-left"></span>
+    </div>
+</a>
 {% endblock %}

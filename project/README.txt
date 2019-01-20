@@ -24,6 +24,20 @@ flask db init
 flask db migrate -m "Nom de la migration"
 flask db upgrade
 
-To update database
-flask db migrate -m "Nom de ta migration"
-flask db upgrade
+
+To set up the database correctly
+flask shell 
+This will open a python console copy/paste the rest of the lines to add a first repository that will contain all the files
+db.session.add(Folder(name="Files"))
+db.session.commit()
+exit()
+
+To execute the application
+flask run --cert app/cert.pem --key app/key.pem
+
+To change the role of the user you have just created to administrator
+flash shell
+user = User.query.get(1)
+user.role = Role.admin
+db.session.commit()
+exit()

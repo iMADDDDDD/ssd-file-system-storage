@@ -33,6 +33,7 @@ from app.fileDownload import bp as fileDownload_bp
 app.register_blueprint(fileDownload_bp)
 
 from app import routes, models
+from app.models import Folder
 
 app.debug = False
 

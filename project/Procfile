@@ -1,2 +1,0 @@
-web: gunicorn deploy:app
-release: python manage.py db upgrade

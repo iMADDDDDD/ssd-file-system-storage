@@ -1,8 +1,8 @@
-"""lsdkjfsl
+"""Nom de la migration
 
-Revision ID: a3153793f40c
+Revision ID: 84f81170ada6
 Revises: 
-Create Date: 2019-01-20 22:10:35.977788
+Create Date: 2019-01-20 23:32:13.001580
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a3153793f40c'
+revision = '84f81170ada6'
 down_revision = None
 branch_labels = None
 depends_on = None

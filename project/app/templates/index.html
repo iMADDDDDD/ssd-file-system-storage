@@ -10,6 +10,11 @@
                 Upload <span class="fa fa-arrow-up"></span>
             </div>
         </a>
+        <a href="{{ url_for('logout') }}" >
+            <div id="button_upload" >
+                Logout <span class="fa fa-arrow-left"></span>
+            </div>
+        </a>
     </div>
     <form action="" method="post">
             {{ form.hidden_tag() }}

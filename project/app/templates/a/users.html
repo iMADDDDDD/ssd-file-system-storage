@@ -12,5 +12,9 @@
       {% endfor %}
     </ul>
   {% endif %}
-
+  <a href="{{ url_for('logout') }}" >
+    <div id="button_upload" >
+        Logout <span class="fa fa-arrow-left"></span>
+    </div>
+</a>
 {% endblock %}
