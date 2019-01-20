@@ -5,7 +5,7 @@
 {% block content %}
     <h1>Hi, {{ user.username }}!</h1>
     <div id="button_wrapper">
-        <a href="{{ url_for('upload') }}" >
+        <a href="{{ url_for('upload') }}/{{ path }}" >
             <div id="button_upload" >
                 Upload <span class="fa fa-arrow-up"></span>
             </div>
@@ -32,6 +32,14 @@
               </tr>
             </thead>
     <tbody>
+        {% if parent %}
+            <tr>
+                <td></td>
+                <td><a href="{{ url_for('index') }}/{{ parent.name }}">...</a></td>
+                <td></td>
+                <td style="text-align: center"></td>
+            </tr>
+        {% endif %}
         {% if files or folders %}
             {% if folders %}
                 {% for folder in folders %}

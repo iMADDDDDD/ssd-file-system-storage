@@ -43,6 +43,7 @@ def currentPath(path):
     user = User.query.get(current_user.id)
     files = user.files
     indexToSuppress = []
+    currentFolder = Folder.query.filter_by(name=path).first()
     for i in range(len(files)):
         f = files[i]
         if f.parent.name != path:
@@ -58,11 +59,17 @@ def currentPath(path):
     for i in range(len(indexToSuppress)):
         folders.pop(indexToSuppress[i] - i)
     if form.validate_on_submit():
-        parent = Folder.query.filter_by(name=path).first()
-        print(parent)
-        newFolder = Folder(name=form.folderName.data, parent=parent)
+        # Create target Directory if don't exist
+        
+        dirName = os.path.abspath(currentFolder.name) + "/" + form.folderName.name
+        if not os.path.exists(dirName):
+            os.mkdir(dirName)
+            flash("Directory " , dirName ,  " Created ")
+        else:    
+            flash("Directory " , dirName ,  " already exists")
+        newFolder = Folder(name=form.folderName.data, parent=currentFolder)
         newFolder.AccessFolder.append(user)
         db.session.add(newFolder)
         db.session.commit()
-        return redirect(url_for("currentPath", path=parent.name))
-    return render_template('index.html', title="Home", user=user, files=files, folders=folders, form=form)
+        return redirect(url_for("currentPath", title="Home", path=currentFolder.name))
+    return render_template('home/home.html', title="Home", user=user, files=files, folders=folders, form=form, parent=currentFolder.parent, path=path)
