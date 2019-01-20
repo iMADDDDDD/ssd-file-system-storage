@@ -46,8 +46,10 @@ def upload_normal_file(path):
         path = returnPathOfFolder(currentFolder.id)
         name = f.filename
         files = f.read()
-        fernet = Fernet(app.config["EKEY"])
-        print(app.config["EKEY"])
+        key = Fernet.generate_key()
+        fernet = Fernet(key)
+        fileDb.encryptionKey = key
+
         encrypted = fernet.encrypt(files)
         with open(os.path.join(path,name), 'wb') as fa:
             fa.write(encrypted)
@@ -70,9 +72,6 @@ def upload_group_file(path):
                 flash("Please enter correct user emails and users with rights to the directory")
                 return render_template('fileModification/upload_group/upload_group_file.html', title='Upload Group File', form=form, path=path)
             users.append(u)
-        if len(users) <= 1:
-            flash("You cannot be the only owner of a group file")
-            return render_template('fileModification/upload_group/upload_group_file.html', title='Upload Group File', form=form, path=path) 
         currentFolder = Folder.query.filter_by(id=path).first()
         fileDb = File(name=f.filename, parent=currentFolder, AccessFile=users, groupFile=True)
         fileDb.lastRequest = "upload"

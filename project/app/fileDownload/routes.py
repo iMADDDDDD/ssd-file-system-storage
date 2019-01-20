@@ -22,7 +22,7 @@ def downloadFile(itemID):
       with open(os.path.join(path,fileD.name), 'rb') as f:
          data = f.read()
 
-      fernet = Fernet(app.config["EKEY"])
+      fernet = Fernet(fileD.encryptionKey)
 
       decrypted = fernet.decrypt(data)
       
