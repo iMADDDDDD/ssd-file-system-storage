@@ -30,8 +30,14 @@ def upload_normal_file(path):
     user = User.query.get(current_user.id)
     if form.validate_on_submit():
         f = request.files['upload']
+        emails = form.email.data
+        users= [user]
+        for email in emails.split(","):
+            u = User.query.filter_by(email=email).first()
+            if u and u in currentFolder.AccessFolder:
+                users.append(u)
         currentFolder = Folder.query.filter_by(id=path).one()
-        fileDb = File(name=f.filename, parent=currentFolder, AccessFile=[user])
+        fileDb = File(name=f.filename, parent=currentFolder, AccessFile=users)
         db.session.add(fileDb)
         f.save(os.path.join(returnPathOfFolder(currentFolder.id), f.filename))
         db.session.commit()
@@ -48,11 +54,22 @@ def upload_group_file(path):
 @login_required
 def upload_normal_directory(path):
     form = UploadDirectoryForm()
+    user = User.query.get(current_user.id)
+    currentFolder = Folder.query.filter_by(id=path).first()
     if form.validate_on_submit():
+        emails = form.email.data
+        users= [user]
+        for email in emails.split(","):
+            u = User.query.filter_by(email=email).first()
+            if u and u in currentFolder.AccessFolder:
+                users.append(u)
         uploaded_files = request.files.getlist("files")
         for f in uploaded_files:
-            currentFolder = Folder.query.filter_by(id=path).one()
-            f.save(os.path.join(returnPathOfFolder(currentFolder.id), currentFolder.name, secure_filename(f.filename)))
+            filename = secure_filename(f.filename.split("/")[-1])
+            uploadFile = File(name=filename, parent=currentFolder, AccessFile=users)
+            db.session.add(uploadFile)
+            db.session.commit()
+            f.save(os.path.join(returnPathOfFolder(currentFolder.id), filename))
         return redirect(url_for('index'))
     return render_template('fileModification/upload_normal/upload_normal_directory.html', title='Upload Normal file', form=form, path=path)
 
