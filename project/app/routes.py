@@ -25,16 +25,64 @@ def index():
         return redirect(url_for("admin"))
     return redirect(url_for("currentPath", path="Files"))
 
+@app.route('/a/profile/<id>')
+@login_required
+def profile(id):
+    user = User.query.filter_by(id=id).first()
+    files = user.files
+    folders = user.folders
+    return render_template('/a/profile.html', title="Administration control panel", user=user, files=files, folders=folders)
+
+
+@app.route('/a/unlock_user/<id>')
+@login_required
+def unlock_user(id):
+    user = User.query.filter_by(id=id).first()
+    user.locked = False
+    db.session.add(user)
+    db.session.commit()
+    flash('User has been unlocked')
+    return redirect(url_for("profile", id=user.id))
+
+@app.route('/a/activate_user/<id>')
+@login_required
+def activate_user(id):
+    user = User.query.filter_by(id=id).first()
+    user.activated = True
+    db.session.add(user)
+    db.session.commit()
+    flash('User account has been activated')
+    return redirect(url_for("profile", id=user.id))
+
+@app.route('/a/deactivate_user/<id>')
+@login_required
+def deactivate_user(id):
+    user = User.query.filter_by(id=id).first()
+    user.activated = False
+    db.session.add(user)
+    db.session.commit()
+    flash('User account has been deactivated')
+    return redirect(url_for("profile", id=user.id))
+
 
 @app.route('/a/index')
+@login_required
 def admin():
-
     admin = current_user
-    users = User.query.all()
+    locked_users = User.query.filter_by(locked=True).all()
+    non_activated_users = User.query.filter_by(activated=False).all()
+
+    return render_template('/a/index.html', title="Administration control panel", admin=admin, locked_users=locked_users,
+    non_activated_users=non_activated_users)
+
+@app.route('/a/users')
+@login_required
+def users():
+    users = User.query.order_by(User.id).all()
     files = File.query.all()
     folders = Folder.query.all()
 
-    return render_template('a/index.html', title="Administration control panel", admin=admin, users=users, files=files, folders=folders)
+    return render_template('/a/users.html', users=users, files=files, folders=folders)
 
 @app.route('/index/<path>', methods=['POST', 'GET'])
 @login_required
@@ -60,12 +108,12 @@ def currentPath(path):
         folders.pop(indexToSuppress[i] - i)
     if form.validate_on_submit():
         # Create target Directory if don't exist
-        
+
         dirName = os.path.abspath(currentFolder.name) + "/" + form.folderName.name
         if not os.path.exists(dirName):
             os.mkdir(dirName)
             flash("Directory " , dirName ,  " Created ")
-        else:    
+        else:
             flash("Directory " , dirName ,  " already exists")
         newFolder = Folder(name=form.folderName.data, parent=currentFolder)
         newFolder.AccessFolder.append(user)
