@@ -21,10 +21,9 @@ app.permanent_session_lifetime = timedelta(minutes=5)
 def index():
     user = User.query.get(current_user.id)
     role = user.role
-
     if role == Role.admin:
         return redirect(url_for("admin"))
-    return redirect(url_for("currentPath", path="Files"))
+    return redirect(url_for("currentPath", path=1)) # Verify that "Files" has for id 1
 
 @app.route('/a/profile/<id>')
 @login_required
@@ -90,33 +89,35 @@ def users():
 def currentPath(path):
     form = CreateFolder()
     user = User.query.get(current_user.id)
-    files = deepcopy(user.files)
     indexToSuppress = []
-    currentFolder = Folder.query.filter_by(name=path).first()
+    currentFolder = Folder.query.get(path)
+    currentFiles = []
     for i in range(len(user.files)):
         f = user.files[i]
-        if f.parent.name != path:
+        currentFiles.append(f)
+        if f.parent.name != currentFolder.name:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
-        files.pop(indexToSuppress[i] - i)
-    folders = deepcopy(user.folders)
+        currentFiles.pop(indexToSuppress[i] - i)
     indexToSuppress = []
+    currentFolders = []
     for i in range(len(user.folders)):
         f = user.folders[i]
-        if f.parent.name != path:
+        currentFolders.append(f)
+        if f.parent.name != currentFolder.name:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
-        folders.pop(indexToSuppress[i] - i)
+        currentFolders.pop(indexToSuppress[i] - i)
     if form.validate_on_submit():
-        dirName = os.path.abspath(currentFolder.name) + "/" + form.folderName.name
+        dirName = returnPathOfFolder(currentFolder.id) + "/" + form.folderName.data
         if not os.path.exists(dirName):
             os.mkdir(dirName)
-            flash("Directory " , dirName ,  " Created ")
+            flash("Directory " + form.folderName.data +  " Created ")
         else:
-            flash("Directory " , dirName ,  " already exists")
+            flash("Directory " + form.folderName.data +  " already exists")
         newFolder = Folder(name=form.folderName.data, parent=currentFolder)
         newFolder.AccessFolder.append(user)
         db.session.add(newFolder)
         db.session.commit()
-        return redirect(url_for("currentPath", title="Home", path=currentFolder.name))
-    return render_template('home/home.html', title="Home", user=user, files=files, folders=folders, form=form, parent=currentFolder.parent, path=path)
+        return redirect(url_for("currentPath", title="Home", path=currentFolder.id))
+    return render_template('home/home.html', title="Home", user=user, files=currentFiles, folders=currentFolders, form=form, parent=currentFolder.parent, path=path)

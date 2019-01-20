@@ -35,7 +35,7 @@
         {% if parent %}
             <tr>
                 <td></td>
-                <td><a href="{{ url_for('index') }}/{{ parent.name }}">...</a></td>
+                <td><a href="{{ url_for('currentPath', path=parent.id) }}">...</a></td>
                 <td></td>
                 <td style="text-align: center"></td>
             </tr>
@@ -45,7 +45,7 @@
                 {% for folder in folders %}
                     <tr>
                         <td><span class="fa fa-folder"></span></td>
-                        <td><a href="{{ url_for('index') }}/{{ folder.name }}">{{ folder.name }}</a></td>
+                        <td><a href="{{ url_for('currentPath', path=folder.id) }}">{{ folder.name }}</a></td>
                         <td>{{ folder.creationDate.strftime('%d-%m-%Y') }}</td>
                         <td style="text-align: center"><a href="{{ url_for('deleteFolder', id=folder.id) }}"><span class="fa fa-trash"></span></a><a href="{{ url_for('downloadFolder', itemID=folder.id)}}" target="_blank"><span class="fa fa-download"></span></a></td>
                     </tr>

@@ -18,7 +18,7 @@ class UploadForm(FlaskForm):
     submit = SubmitField('Upload')
     upload = FileField('File', validators=[
         FileRequired(),
-        FileAllowed(['jpg', 'png', 'txt'], 'Valid file types only!')
+        FileAllowed(['jpg', 'png', 'txt', 'pdf'], 'Valid file types only!')
     ])
 
 class UploadDirectoryForm(FlaskForm):
