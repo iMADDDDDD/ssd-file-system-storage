@@ -29,6 +29,8 @@ from app.authentication import bp as authentication_bp
 app.register_blueprint(authentication_bp)
 from app.fileModification import bp as fileModification_bp
 app.register_blueprint(fileModification_bp)
+from app.fileDownload import bp as fileDownload_bp
+app.register_blueprint(fileDownload_bp)
 
 from app import routes, models
 

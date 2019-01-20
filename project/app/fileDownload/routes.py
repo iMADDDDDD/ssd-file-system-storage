@@ -16,11 +16,10 @@ from app.routes import currentPath
 from pytransmit import FTPClient
 
 
-@app.route('/download/<fileId>')
+@app.route('/download/file/<itemID>', methods = ['GET', 'POST'])
 @login_required
-def download(itemType, itemId):
-	if not current_user.is_authenticated:
-        	return redirect(url_for('index'))
-	verification = 
-	if 
+def downloadFile(itemId):
+   path = returnPathOfFile(itemId)
+   return send_from_directory(directory=path, filename=fileD.name)
+		
 	
