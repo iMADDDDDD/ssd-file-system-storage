@@ -9,7 +9,7 @@ from flask_login import current_user, login_required
 @login_required
 def downloadFile(itemID):
    fileD = File.query.get(itemID)
-   path = app.config['UPLOAD_PATH'] + returnPathOfFile(itemID)
+   path = returnPathOfFile(itemID)
    flash(path)
    return send_from_directory(directory=path, filename=fileD.name)
 

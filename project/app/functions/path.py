@@ -11,5 +11,4 @@ def returnPathOfFile(fileId):
 	while(parentFolder.parent):
 		parentFolder = parentFolder.parent
 		path = "/" + parentFolder.name + path
-	print(app.config['UPLOAD_PATH']+path, fileD.name)
-	return path
+	return app.config['UPLOAD_PATH'] + path
