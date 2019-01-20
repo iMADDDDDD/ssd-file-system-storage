@@ -2,7 +2,7 @@ import pyqrcode
 import os
 
 from app import app, db
-from app.models import User, File, JwtToken
+from app.models import User, File, JwtToken, Role
 from app.authentication.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.email import send_password_reset_email, send_confirmation_email
 from flask import render_template, redirect, url_for, flash, request, session
@@ -42,7 +42,7 @@ def login():
             if user.failedLogin >= 3:
                 user.locked = True
             db.session.add(user)
-            db.session.commit(user)
+            db.session.commit()
             flash('Invalid token')
             return redirect(url_for('login'))
         user.failedLogin = 0
@@ -75,6 +75,7 @@ def register():
         user.set_password(form.password.data)
         user.activated = False
         user.locked = False
+        user.role = Role.admin
         db.session.add(user)
         db.session.commit()
 
