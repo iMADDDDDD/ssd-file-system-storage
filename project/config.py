@@ -20,4 +20,3 @@ class Config(object):
     MAIL_PASSWORD = 'project2019secure'
     ADMINS = 'autosecuremail@gmail.com'
     UPLOAD_PATH = os.getcwd() #to change off debug
-    EKEY=Fernet.generate_key()
