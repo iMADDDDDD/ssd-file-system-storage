@@ -59,6 +59,9 @@ def upload_group_file(path):
                 flash("Please enter correct user emails and users with rights to the directory")
                 return render_template('fileModification/upload_group/upload_group_file.html', title='Upload Group File', form=form, path=path)
             users.append(u)
+        if len(users) <= 1:
+            flash("You cannot be the only owner of a group file")
+            return render_template('fileModification/upload_group/upload_group_file.html', title='Upload Group File', form=form, path=path) 
         currentFolder = Folder.query.filter_by(id=path).first()
         fileDb = File(name=f.filename, parent=currentFolder, AccessFile=users, groupFile=True)
         fileDb.lastRequest = "upload"
@@ -127,3 +130,11 @@ def deleteFolder(id):
     db.session.commit()
     flash(f.name + " has been deleted correctly")
     return redirect(url_for("currentPath", path=f.parent.id))
+
+@app.route('/groupAcceptance', methods=['POST', 'GET'])
+@login_required
+def groupAcceptance():
+    upload = []
+    delete = []
+    donwload = []
+    return render_template("home/groupAcceptanceWindow.html")

@@ -9,6 +9,11 @@
                 Upload <span class="fa fa-arrow-up"></span>
             </div>
         </a>
+        <a href="{{ url_for('groupAcceptance')}}" >
+            <div id="button_upload" >
+                Group acceptance window <span class="fa fa-arrow-right"></span>
+            </div>
+        </a>
     </div>
     <form action="" method="post">
             {{ form.hidden_tag() }}

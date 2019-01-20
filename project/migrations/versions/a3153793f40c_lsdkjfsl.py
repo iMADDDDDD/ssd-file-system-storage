@@ -1,8 +1,8 @@
-"""init
+"""lsdkjfsl
 
-Revision ID: 34db076319ae
+Revision ID: a3153793f40c
 Revises: 
-Create Date: 2019-01-20 21:54:16.191053
+Create Date: 2019-01-20 22:10:35.977788
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '34db076319ae'
+revision = 'a3153793f40c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,7 +25,6 @@ def upgrade():
     sa.Column('groupFile', sa.Boolean(), nullable=True),
     sa.Column('idAcceptance', sa.String(length=24), nullable=True),
     sa.Column('lastRequest', sa.String(length=24), nullable=True),
-    sa.Column('encryptionKey', sa.String(length=128), nullable=True),
     sa.Column('folderId', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['folderId'], ['Folder.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -67,6 +66,7 @@ def upgrade():
     sa.Column('groupFile', sa.Boolean(), nullable=True),
     sa.Column('idAcceptance', sa.String(length=24), nullable=True),
     sa.Column('lastRequest', sa.String(length=24), nullable=True),
+    sa.Column('encryptionKey', sa.String(length=128), nullable=True),
     sa.Column('folderId', sa.Integer(), nullable=False),
     sa.Column('creationDate', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['folderId'], ['Folder.id'], ),
