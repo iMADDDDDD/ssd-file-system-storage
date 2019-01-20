@@ -13,8 +13,6 @@ from werkzeug.urls import url_parse
 from datetime import timedelta
 from uuid import uuid4
 from app.routes import currentPath
-from pytransmit import FTPClient
-
 
 @app.route('/download/file/<itemID>', methods = ['GET', 'POST'])
 @login_required
