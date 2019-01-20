@@ -59,7 +59,7 @@ def deleteFile(id):
     db.session.delete(f)
     db.session.commit()
     flash(f.name + " has been delete correctly")
-    return redirect("index") + f.parent.name
+    return redirect(url_for("currentPath", path=f.parent.name))
 
 
 @app.route('/deleter/folder/<id>', methods=['POST', 'GET'])
@@ -69,4 +69,4 @@ def deleteFolder(id):
     db.session.delete(f)
     db.session.commit()
     flash(f.name + " has been delete correctly")
-    return redirect("index") + f.parent.name
+    return redirect(url_for("currentPath", path=f.parent.name))
