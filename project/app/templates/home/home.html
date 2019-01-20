@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
 
-
 {% block content %}
     <h1>Hi, {{ user.username }}!</h1>
     <div id="button_wrapper">
-        <a href="{{ url_for('upload') }}/{{ path }}" >
+        <a href="{{ url_for('upload', path=path) }}" >
             <div id="button_upload" >
                 Upload <span class="fa fa-arrow-up"></span>
             </div>

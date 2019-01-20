@@ -15,26 +15,51 @@ from app.routes import currentPath
 app.permanent_session_lifetime = timedelta(minutes=5)
 
 
-@app.route('/upload')
+@app.route('/upload/<path>')
 @login_required
-def upload():
-    form = UploadForm()
-    return render_template('fileModification/upload.html', title='Upload Normal file', form=form)
+def upload(path):
+    return render_template('fileModification/upload.html', title='Upload file', path=path)
 
 
-@app.route('/upload_normal', methods=['POST'])
+@app.route('/upload_normal_file/<path>', methods=['POST','GET'])
 @login_required
-def upload_normal():
+def upload_normal_file(path):
     form = UploadForm()
-    print(request)
-    return render_template('fileModification/upload_normal_file.html', title='Upload Normal file', form=form)
+    print("lofasz")
+
+    if form.validate_on_submit():
+        file=request.files['upload']
+        print("NASFASFSD")
+        file.save(file.filename)
+        return redirect(url_for('index'))
+    return render_template('fileModification/upload_normal/upload_normal_file.html', title='Upload Normal file', form=form, path=path)
 
 
-@app.route('/upload_group')
+@app.route('/upload_group_file/<path>',methods=['POST','GET'])
 @login_required
-def upload_group():
+def upload_group_file(path):
     form = UploadForm()
-    return render_template('fileModification/upload_group_file.html', title='Upload Group File', form=form)
+    return render_template('fileModification/upload_group/upload_group_file.html', title='Upload Group File', form=form, path=path)
+
+
+@app.route('/upload_normal_directory/<path>', methods=['POST','GET'])
+@login_required
+def upload_normal_directory(path):
+    form = UploadForm()
+    print("lofasz")
+    if request.method == 'POST':
+        file=request.files['upload']
+        print(request.files)
+        file.save(file.filename)
+        return redirect(url_for('index'))
+
+    return render_template('fileModification/upload_normal/upload_normal_directory.html', title='Upload Normal Directory', form=form, path=path)
+
+@app.route('/upload_group_directory/<path>', methods=['POST','GET'])
+@login_required
+def upload_group_directory(path):
+    form = UploadForm()
+    return render_template('fileModification/upload_group/upload_group_directory.html', title='Upload Group Directory', form=form, path=path)
 
 
 @app.route('/uploader', methods=['POST', 'GET'])
