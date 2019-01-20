@@ -96,11 +96,21 @@ class Folder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(24))
     creationDate = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    groupFile = db.Column(db.Boolean, default=False)
+    idAcceptance = db.Column(db.String(24))
+    lastRequest = db.Column(db.String(24))
+    encryptionKey = db.Column(db.String(128))
     folderId = db.Column(db.Integer, db.ForeignKey('Folder.id'))
     subFiles = db.relationship('File', backref='parent', lazy='dynamic')
     parent = db.relationship("Folder", remote_side=[id], backref='subFolders')
     AccessFolder = db.relationship('User', secondary=AccessFolder, lazy='dynamic',
                                    backref=db.backref('folders', lazy=True))
+
+    def set_encryptionKey(self, encryptionKey):
+        self.encryptionKey = generate_password_hash(encryptionKey)
+
+    def check_encryptionKey(self, encryptionKey):
+        return check_password_hash(self.encryptionKey, encryptionKey)
 
     def __repr__(self):
         return '<Folder {}>'.format(self.name)
@@ -118,8 +128,9 @@ class File(db.Model):
     __tablename__ = 'File'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(24))
-    path = db.Column(db.String(128))
-    size = db.Column(db.Integer)
+    groupFile = db.Column(db.Boolean, default=False)
+    idAcceptance = db.Column(db.String(24))
+    lastRequest = db.Column(db.String(24))
     folderId = db.Column(db.Integer, db.ForeignKey(
         'Folder.id'), nullable=False)
     creationDate = db.Column(db.DateTime, index=True, default=datetime.utcnow)

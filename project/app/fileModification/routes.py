@@ -48,6 +48,25 @@ def upload_normal_file(path):
 @login_required
 def upload_group_file(path):
     form = UploadForm()
+    user = User.query.get(current_user.id)
+    if form.validate_on_submit():
+        f = request.files['upload']
+        emails = form.email.data
+        users= [user]
+        for email in emails.split(","):
+            u = User.query.filter_by(email=email).first()
+            if not u or u not in currentFolder.AccessFolder:
+                flash("Please enter correct user emails and users with rights to the directory")
+                return render_template('fileModification/upload_group/upload_group_file.html', title='Upload Group File', form=form, path=path)
+            users.append(u)
+        currentFolder = Folder.query.filter_by(id=path).first()
+        fileDb = File(name=f.filename, parent=currentFolder, AccessFile=users, groupFile=True)
+        fileDb.lastRequest = "upload"
+        fileDb.idAcceptance = str(user.id)
+        db.session.add(fileDb)
+        f.save(os.path.join(returnPathOfFolder(currentFolder.id), f.filename))
+        db.session.commit()
+        return redirect(url_for('index'))
     return render_template('fileModification/upload_group/upload_group_file.html', title='Upload Group File', form=form, path=path)
 
 @app.route('/upload_normal_directory/<path>', methods=['POST','GET'])
