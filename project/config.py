@@ -17,4 +17,4 @@ class Config(object):
     MAIL_USERNAME = 'autosecuremail@gmail.com'
     MAIL_PASSWORD = 'project2019secure'
     ADMINS = 'autosecuremail@gmail.com'
-    UPLOAD_PATH = os.path.abspath('Files') #to change off debug
+    UPLOAD_PATH = os.getcwd() #to change off debug

@@ -21,7 +21,7 @@
             </p>
             <p>{{ form.submit() }}</p>
     </form>
- <button type="button">Click Me!</button> 
+
     <table class="table table-dark" >
             <thead>
               <tr>
@@ -47,7 +47,7 @@
                         <td><span class="fa fa-folder"></span></td>
                         <td><a href="{{ url_for('index') }}/{{ folder.name }}">{{ folder.name }}</a></td>
                         <td>{{ folder.creationDate.strftime('%d-%m-%Y') }}</td>
-                        <td style="text-align: center"><a href="{{ url_for('deleteFolder', id=folder.id) }}"><span class="fa fa-trash"></span></a><a href="{{ url_for('downloadFile', itemID=folder.id)}}" target="_blank"><span class="fa fa-download"></span></a></td>
+                        <td style="text-align: center"><a href="{{ url_for('deleteFolder', id=folder.id) }}"><span class="fa fa-trash"></span></a><a href="{{ url_for('downloadFolder', itemID=folder.id)}}" target="_blank"><span class="fa fa-download"></span></a></td>
                     </tr>
                 {% endfor %}
             {% endif %}
@@ -57,7 +57,7 @@
                         <td><span class="fa fa-file"></span></td>
                         <td>{{ file.name }}</td>
                         <td>{{ file.creationDate.strftime('%d-%m-%Y') }}</td>
-                        <td style="text-align: center"><a href="{{ url_for('deleteFile', id=file.id) }}"><span class="fa fa-trash"></span></a><a href="{{ url_for('downloadFile', itemID=file.id)}}" target="_blank"><span class="fa fa-download"></span></a></td>
+                        <td style="text-align: center"><a href="{{ url_for('deleteFile', id=file.id) }}"><span class="fa fa-trash"></span></a><a href="{{ url_for('downloadFile', itemID=file.id)}}"><span class="fa fa-download"></span></a></td>
                     </tr>
                 {% endfor %}
             {% endif %}
