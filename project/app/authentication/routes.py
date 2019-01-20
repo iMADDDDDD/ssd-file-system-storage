@@ -75,7 +75,6 @@ def register():
         user.set_password(form.password.data)
         user.activated = False
         user.locked = False
-        user.role = Role.admin
         db.session.add(user)
         db.session.commit()
 
