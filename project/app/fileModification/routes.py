@@ -142,10 +142,43 @@ def deleteFolder(id):
     flash(f.name + " has been deleted correctly")
     return redirect(url_for("currentPath", path=f.parent.id))
 
-@app.route('/groupAcceptance', methods=['POST', 'GET'])
+@app.route('/groupAcceptance', methods=['GET'])
 @login_required
 def groupAcceptance():
+    user = User.query.get(current_user.id)
     upload = []
     delete = []
-    donwload = []
-    return render_template("home/groupAcceptanceWindow.html")
+    download = []
+    for f in user.files:
+        if f.groupFile and str(user.id) not in f.idAcceptance.split(","):
+            if f.lastRequest == "upload":
+                upload.append(f)
+            if f.lastRequest == "delete":
+                delete.append(f)
+            if f.lastRequest == "download":
+                download.append(f)
+    for f in user.folders:
+        if f.groupFile and str(user.id) not in f.idAcceptance.split(","):
+            if f.lastRequest == "upload":
+                upload.append(f)
+            if f.lastRequest == "delete":
+                delete.append(f)
+            if f.lastRequest == "download":
+                download.append(f)
+    return render_template("home/groupAcceptanceWindow.html", upload=upload, download=download, delete=delete)
+
+
+@app.route('/accept/<id>/<name>', methods=['POST', 'GET'])
+@login_required
+def accept(id, name):
+    user = User.query.get(current_user.id)
+    folder = Folder.query.filter_by(name=name, id=id)
+    if folder.count() > 0:
+        folder = folder.first()
+    else:
+        folder = File.query.filter_by(name=name, id=id)
+        if folder.count() > 0:
+            folder = folder.first()
+    folder.idAcceptance += "," + user.id
+    db.session.commit()
+    return redirect(url_for('groupAcceptance'))

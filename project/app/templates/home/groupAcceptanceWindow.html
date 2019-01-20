@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h1><u>Delete requests</u></h1>
+    {% if not delete %}
+      <p>No delete requests.</p>
+    {% else %}
+      <ul>
+        {% for d in delete %}
+        <li><a href="{{ url_for('accept', id=d.id, name=d.name) }}">Click to accept deletion of {{d.name}}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  
+    <h1><u>Download requests</u></h1>
+    {% if not download %}
+      <p>No download requests.</p>
+    {% else %}
+      <ul>
+        {% for d in download %}
+        <li><a href="{{ url_for('accept', id=d.id, name=d.name) }}">Click to accept download of {{d.name}}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <h1><u>Upload requests</u></h1>
+    {% if not upload %}
+      <p>No upload requests.</p>
+    {% else %}
+      <ul>
+        {% for u in upload %}
+        <li><a href="{{ url_for('accept', id=u.id) }}">Click to accept upload of {{u.name}}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+{% endblock %}
