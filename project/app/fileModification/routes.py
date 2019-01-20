@@ -49,12 +49,10 @@ def upload_group_file(path):
 def upload_normal_directory(path):
     form = UploadDirectoryForm()
     if form.validate_on_submit():
-        print("dsffdsf")
         uploaded_files = request.files.getlist("files")
-        for i in range(len(uploaded_files)):
-            #os.makedirs(uploaded_files[i].filename)
-            print(uploaded_files[i].filename)
-            uploaded_files[i].save(os.getcwd())
+        for f in uploaded_files:
+            currentFolder = Folder.query.filter_by(name=path).one()
+            f.save(os.path.join(returnPathOfFolder(currentFolder.id), secure_filename(f.filename)))
         return redirect(url_for('index'))
     return render_template('fileModification/upload_normal/upload_normal_directory.html', title='Upload Normal file', form=form, path=path)
 
