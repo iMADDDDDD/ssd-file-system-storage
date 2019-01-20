@@ -1,4 +1,6 @@
 import os
+from cryptography.fernet import Fernet
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -18,3 +20,4 @@ class Config(object):
     MAIL_PASSWORD = 'project2019secure'
     ADMINS = 'autosecuremail@gmail.com'
     UPLOAD_PATH = os.getcwd() #to change off debug
+    EKEY=Fernet.generate_key()

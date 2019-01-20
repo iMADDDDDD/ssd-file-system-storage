@@ -13,6 +13,10 @@ from datetime import timedelta
 from uuid import uuid4
 from app.routes import currentPath
 from app.functions.path import returnPathOfFile, returnPathOfFolder
+import os, random, struct
+import cryptography
+from cryptography.fernet import Fernet
+
 import shutil
 
 app.permanent_session_lifetime = timedelta(minutes=5)
@@ -33,7 +37,14 @@ def upload_normal_file(path):
         currentFolder = Folder.query.filter_by(id=path).one()
         fileDb = File(name=f.filename, parent=currentFolder, AccessFile=[user])
         db.session.add(fileDb)
-        f.save(os.path.join(returnPathOfFolder(currentFolder.id), f.filename))
+        path = returnPathOfFolder(currentFolder.id)
+        name = f.filename
+        files = f.read()
+        fernet = Fernet(app.config["EKEY"])
+        print(app.config["EKEY"])
+        encrypted = fernet.encrypt(files)
+        with open(os.path.join(path,name), 'wb') as fa:
+            fa.write(encrypted)
         db.session.commit()
         return redirect(url_for('index'))
     return render_template('fileModification/upload_normal/upload_normal_file.html', title='Upload Normal file', form=form, path=path)
