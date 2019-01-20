@@ -25,7 +25,6 @@ def upload(path):
 @login_required
 def upload_normal_file(path):
     form = UploadForm()
-    print("lofasz")
 
     if form.validate_on_submit():
         file=request.files['upload']

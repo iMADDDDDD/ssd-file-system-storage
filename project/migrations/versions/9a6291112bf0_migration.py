@@ -1,8 +1,8 @@
-"""Deuxieme essai
+"""migration
 
-Revision ID: cecf9f03fa5b
+Revision ID: 9a6291112bf0
 Revises: 
-Create Date: 2019-01-15 21:59:06.449210
+Create Date: 2019-01-20 11:22:59.683285
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'cecf9f03fa5b'
+revision = '9a6291112bf0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -43,6 +43,7 @@ def upgrade():
     sa.Column('locked', sa.Boolean(), nullable=True),
     sa.Column('failedLogin', sa.Integer(), nullable=True),
     sa.Column('confirmed', sa.Boolean(), nullable=True),
+    sa.Column('otp_secret', sa.String(length=16), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_User_creationDate'), 'User', ['creationDate'], unique=False)
