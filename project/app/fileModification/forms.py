@@ -12,7 +12,6 @@ class DeletionForm(FlaskForm):
     filename = SelectField('filename', coerce=int, choices=[(1, "no files")])
     submit = SubmitField('Delete')
 
-
 class UploadForm(FlaskForm):
     email = StringField('Email', validators=[Email(),Optional()], render_kw={
                         "placeholder": "example@example.com, ... "})
@@ -21,3 +20,8 @@ class UploadForm(FlaskForm):
         FileRequired(),
         FileAllowed(['jpg', 'png', 'txt'], 'Valid file types only!')
     ])
+
+class UploadDirectoryForm(FlaskForm):
+    email = StringField('Email', validators=[Email(),Optional()], render_kw={
+                        "placeholder": "example@example.com, ... "})
+    submit = SubmitField('Upload')
