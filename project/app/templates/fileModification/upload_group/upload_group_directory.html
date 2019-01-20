@@ -2,15 +2,15 @@
 
 {% block content %}
     <h1>Upload file</h1>
-    <form action = "http://localhost:5000/upload_normal" method = "POST" 
+    <form action = "http://localhost:5000/upload_group_directory" method = "POST" 
     enctype = "multipart/form-data">
     <div style="display:flex">
             <div style="width:50%">
-                    {{ form.upload()}}
+                <p>Directory: <input type="file" webkitdirectory mozdirectory /></p>
             </div>
             <div style="width:50%">
                 <div id="group_file">
-                    <h4>Share your file</h4>
+                    <h4>Add members to group files</h4>
 
                     <br>
                         {{ form.email(size=16) }}<br>
