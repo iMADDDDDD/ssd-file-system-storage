@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Administration control panel - Viewing user {{ user.username }}</h1>
+  <hr />
+  <h1><u>Information about this account</u></h1>
+  <ul>
+    <li><b>ID:</b> {{ user.id }}</li>
+    <li><b>E-mail:</b> {{ user.email }}</li>
+    <li><b>Account type:</b> {% if user.role == 1 %} User {% else %} Administrator {% endif %}</li>
+    <li><b>Account created:</b> {{ user.creationDate.strftime("%d-%m-%Y") }}</li>
+    <li><b>Locked?</b> {{ user.locked }}</li>
+    <li><b>Activated?</b> {{ user.activated }}</li>
+  </ul>
+  <hr />
+  <h1><u>Actions on this account</u></h1>
+  <p><a href="{{ url_for('unlock_user', id=user.id) }}" class="button primary">Unlock user</a></p>
+  <p><a href="{{ url_for('activate_user', id=user.id) }}" class="button primary">Activate account</a></p>
+  <p><a href="{{ url_for('deactivate_user', id=user.id) }}" class="button primary">Deactivate user</a></p>
+
+  <h1><u>Current storage of {{ user.username }}</u></h1>
+  <table class="table table-dark" >
+          <thead>
+            <tr>
+              <th scope="col"> </th>
+              <th scope="col">Filename</th>
+              <th scope="col">Creation Date</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+  <tbody>
+      {% if files or folders %}
+          {% if folders %}
+              {% for folder in folders %}
+                  <tr>
+                      <td><span class="fa fa-folder"></span></td>
+                      <td><a href="{{ url_for('index') }}/{{ folder.name }}">{{ folder.name }}</a></td>
+                      <td>{{ folder.creationDate.strftime('%d-%m-%Y') }}</td>
+                      <td style="text-align: center"><a href="{{ url_for('deleteFolder', id=folder.id) }}"><span class="fa fa-trash"></span></a></td>
+                  </tr>
+              {% endfor %}
+          {% endif %}
+          {% if files %}
+              {% for file in files %}
+                  <tr>
+                      <td><span class="fa fa-file"></span></td>
+                      <td>{{ file.name }}</td>
+                      <td>{{ file.creationDate.strftime('%d-%m-%Y') }}</td>
+                      <td style="text-align: center"><a href="{{ url_for('deleteFile', id=file.id) }}"><span class="fa fa-trash"></span></a></td>
+                  </tr>
+              {% endfor %}
+          {% endif %}
+
+      {% else %}
+
+      <tr id="table_empty_row" style="background: none; border:0px;">
+          <td></td>
+          <td>Empty directory</td>
+      </tr>
+      {% endif %}
+  </tbody>
+  </table>
+{% endblock %}

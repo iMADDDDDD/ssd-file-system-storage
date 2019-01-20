@@ -73,6 +73,8 @@ def register():
         user = User(username=form.username.data,
                     email=form.email.data, confirmed=False)
         user.set_password(form.password.data)
+        user.activated = False
+        user.locked = False
         db.session.add(user)
         db.session.commit()
 
