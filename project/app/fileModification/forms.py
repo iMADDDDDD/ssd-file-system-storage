@@ -22,6 +22,6 @@ class UploadForm(FlaskForm):
     ])
 
 class UploadDirectoryForm(FlaskForm):
-    email = StringField('Email', validators=[Email(),Optional()], render_kw={
+    email = StringField('Email', validators=[Optional()], render_kw={
                         "placeholder": "example@example.com, ... "})
     submit = SubmitField('Upload')
