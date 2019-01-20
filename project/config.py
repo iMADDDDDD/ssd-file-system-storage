@@ -17,3 +17,4 @@ class Config(object):
     MAIL_USERNAME = 'autosecuremail@gmail.com'
     MAIL_PASSWORD = 'project2019secure'
     ADMINS = 'autosecuremail@gmail.com'
+    UPLOAD_PATH = os.getcwd() #to change after debug

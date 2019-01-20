@@ -2,18 +2,20 @@
 
 {% block content %}
     <h1>Upload file</h1>
-    <form action = "http://localhost:5000/upload_normal" method = "POST" 
-    enctype = "multipart/form-data">
-    <div style="display:flex">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div style="display:flex">
             <div style="width:50%">
-                    {{ form.upload()}}
+                    <p>Directory: <input type="file" name="files" webkitdirectory mozdirectory /></p>
             </div>
             <div style="width:50%">
                 <div id="group_file">
                     <h4>Share your file</h4>
-
                     <br>
                         {{ form.email(size=16) }}<br>
+                        {% for error in form.email.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
                 </div>
             </div>
         </div>
