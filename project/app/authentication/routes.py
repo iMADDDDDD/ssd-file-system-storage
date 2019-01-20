@@ -21,9 +21,14 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
+        if user is None:
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
         if not user.confirmed:
             flash('Confirm your account before logging in')
             return redirect(url_for('login'))
+        if not user.locked:
+            flash("Your account has been locked.\n Please wait for the asministrator to unlock your account")
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))

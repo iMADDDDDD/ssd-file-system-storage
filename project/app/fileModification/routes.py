@@ -55,7 +55,6 @@ def uploader():
 @login_required
 def deleteFile(id):
     f = File.query.filter_by(id=id).one()
-    print(f.parent.name)
     db.session.delete(f)
     db.session.commit()
     flash(f.name + " has been delete correctly")
