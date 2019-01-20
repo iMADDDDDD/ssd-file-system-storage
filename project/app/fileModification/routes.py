@@ -15,11 +15,6 @@ from app.routes import currentPath
 from app.functions.path import returnPathOfFile, returnPathOfFolder
 import shutil
 
-APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLD = '/Users/macbookair/Desktop/lofasz'
-UPLOAD_FOLDER = os.path.join(APP_ROOT, UPLOAD_FOLD)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 app.permanent_session_lifetime = timedelta(minutes=5)
 
 
@@ -35,7 +30,7 @@ def upload_normal_file(path):
     user = User.query.get(current_user.id)
     if form.validate_on_submit():
         f = request.files['upload']
-        currentFolder = Folder.query.filter_by(name=path).one()
+        currentFolder = Folder.query.filter_by(id=path).one()
         fileDb = File(name=f.filename, parent=currentFolder, AccessFile=[user])
         db.session.add(fileDb)
         f.save(os.path.join(returnPathOfFolder(currentFolder.id), f.filename))
@@ -56,7 +51,7 @@ def upload_normal_directory(path):
     if form.validate_on_submit():
         uploaded_files = request.files.getlist("files")
         for f in uploaded_files:
-            currentFolder = Folder.query.filter_by(name=path).one()
+            currentFolder = Folder.query.filter_by(id=path).one()
             f.save(os.path.join(returnPathOfFolder(currentFolder.id), currentFolder.name, secure_filename(f.filename)))
         return redirect(url_for('index'))
     return render_template('fileModification/upload_normal/upload_normal_directory.html', title='Upload Normal file', form=form, path=path)
@@ -78,7 +73,7 @@ def deleteFile(id):
     os.remove(filePath)
     db.session.commit()
     flash(f.name + " has been deleted correctly")
-    return redirect(url_for("currentPath", path=f.parent.name))
+    return redirect(url_for("currentPath", path=f.parent.id))
 
 
 @app.route('/deleter/folder/<id>', methods=['POST', 'GET'])
@@ -95,4 +90,4 @@ def deleteFolder(id):
     db.session.delete(f)
     db.session.commit()
     flash(f.name + " has been deleted correctly")
-    return redirect(url_for("currentPath", path=f.parent.name))
+    return redirect(url_for("currentPath", path=f.parent.id))

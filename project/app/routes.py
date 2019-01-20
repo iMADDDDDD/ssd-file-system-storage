@@ -21,10 +21,9 @@ app.permanent_session_lifetime = timedelta(minutes=5)
 def index():
     user = User.query.get(current_user.id)
     role = user.role
-
     if role == Role.admin:
         return redirect(url_for("admin"))
-    return redirect(url_for("currentPath", path="Files"))
+    return redirect(url_for("currentPath", path=1)) # Verify that "Files" has for id 1
 
 @app.route('/a/profile/<id>')
 @login_required
@@ -91,12 +90,12 @@ def currentPath(path):
     form = CreateFolder()
     user = User.query.get(current_user.id)
     indexToSuppress = []
-    currentFolder = Folder.query.filter_by(name=path).first()
+    currentFolder = Folder.query.get(path)
     currentFiles = []
     for i in range(len(user.files)):
         f = user.files[i]
         currentFiles.append(f)
-        if f.parent.name != path:
+        if f.parent.name != currentFolder.name:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
         currentFiles.pop(indexToSuppress[i] - i)
@@ -105,7 +104,7 @@ def currentPath(path):
     for i in range(len(user.folders)):
         f = user.folders[i]
         currentFolders.append(f)
-        if f.parent.name != path:
+        if f.parent.name != currentFolder.name:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
         currentFolders.pop(indexToSuppress[i] - i)
@@ -120,5 +119,5 @@ def currentPath(path):
         newFolder.AccessFolder.append(user)
         db.session.add(newFolder)
         db.session.commit()
-        return redirect(url_for("currentPath", title="Home", path=currentFolder.name))
+        return redirect(url_for("currentPath", title="Home", path=currentFolder.id))
     return render_template('home/home.html', title="Home", user=user, files=currentFiles, folders=currentFolders, form=form, parent=currentFolder.parent, path=path)

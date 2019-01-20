@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <script>
+function close_window() {
+  if (confirm("Close Window?")) {
+    close();
+  }
+}
+    </script>
+    <h1>Click <a href="javascript:close_window();">here</a> to close this tab.</h1>
+{% endblock %}
