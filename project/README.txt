@@ -17,7 +17,7 @@ pip install onetimepass
 pip install pyqrcode
 pip install pysftp
 pip install pytransmit
-pip install ftp
+pip install flask_uploads
 
 To update database
 flask db migrate -m "Nom de ta migration"
