@@ -21,6 +21,9 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
+        if not user:
+            flash('Who are you ?')
+            return redirect(url_for('login'))
         if not user.confirmed:
             flash('Confirm your account before logging in')
             return redirect(url_for('login'))

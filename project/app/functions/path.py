@@ -5,11 +5,11 @@ from app.models import User, File, Folder
 from flask import send_from_directory
 
 def returnPathOfFile(fileId):
-	fileD = File.query.get(itemId)
-	parentFolder = Folder.queryget(fileD.folderId)
+	fileD = File.query.get(fileId)
+	parentFolder = fileD.parent
 	path = "/"+parentFolder.name
 	while(parentFolder.parent):
-		parentFolder = Folder.query.get(parentFolder.parent)
+		parentFolder = parentFolder.parent
 		path = "/" + parentFolder.name + path
 	print(app.config['UPLOAD_PATH']+path, fileD.name)
 	return path
