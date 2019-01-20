@@ -59,14 +59,14 @@ def currentPath(path):
     for i in range(len(indexToSuppress)):
         folders.pop(indexToSuppress[i] - i)
     if form.validate_on_submit():
-        # Create target Directory if don't exist
-        
-        dirName = os.path.abspath(currentFolder.name) + "/" + form.folderName.name
+        dirName = form.folderName.data
+        # TODO use the function to get the absolute path
         if not os.path.exists(dirName):
             os.mkdir(dirName)
-            flash("Directory " , dirName ,  " Created ")
-        else:    
-            flash("Directory " , dirName ,  " already exists")
+            flash("Directory " + form.folderName.data + " Created ")
+        else:
+            flash("Directory " + form.folderName.data + " already exists")
+            return redirect(url_for("currentPath", title="Home", path=currentFolder.name))
         newFolder = Folder(name=form.folderName.data, parent=currentFolder)
         newFolder.AccessFolder.append(user)
         db.session.add(newFolder)

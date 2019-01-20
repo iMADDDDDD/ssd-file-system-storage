@@ -23,14 +23,26 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if not user:
             flash('Who are you ?')
-            return redirect(url_for('login'))
         if not user.confirmed:
             flash('Confirm your account before logging in')
             return redirect(url_for('login'))
-        if user is None or not user.check_password(form.password.data):
+        if not user.locked:
+            flash("Your account has been locked.\n Please wait for the asministrator to unlock your account")
+            return redirect(url_for('login'))
+        if not user.check_password(form.password.data):
+            user.failedLogin += 1
+            if user.failedLogin == 3:
+                user.locked = True
+            db.session.add(user)
+            db.session.commit()
             flash('Invalid username or password')
             return redirect(url_for('login'))
-        if user is None or not user.verify_totp(form.token.data):
+        if not user.verify_totp(form.token.data):
+            user.failedLogin += 1
+            if user.failedLogin == 3:
+                user.locked = True
+            db.session.add(user)
+            db.session.commit(user)
             flash('Invalid token')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
