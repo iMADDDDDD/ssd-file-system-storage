@@ -32,9 +32,14 @@ def upload(path):
 @login_required
 def upload_normal_file(path):
     form = UploadForm()
+    user = User.query.get(current_user.id)
     if form.validate_on_submit():
-        file=request.files['upload']
-        file.save(file.filename)
+        f = request.files['upload']
+        currentFolder = Folder.query.filter_by(name=path).one()
+        fileDb = File(name=f.filename, parent=currentFolder, AccessFile=[user])
+        db.session.add(fileDb)
+        f.save(os.path.join(returnPathOfFolder(currentFolder.id), f.filename))
+        db.session.commit()
         return redirect(url_for('index'))
     return render_template('fileModification/upload_normal/upload_normal_file.html', title='Upload Normal file', form=form, path=path)
 
@@ -52,7 +57,7 @@ def upload_normal_directory(path):
         uploaded_files = request.files.getlist("files")
         for f in uploaded_files:
             currentFolder = Folder.query.filter_by(name=path).one()
-            f.save(os.path.join(returnPathOfFolder(currentFolder.id), secure_filename(f.filename)))
+            f.save(os.path.join(returnPathOfFolder(currentFolder.id), currentFolder.name, secure_filename(f.filename)))
         return redirect(url_for('index'))
     return render_template('fileModification/upload_normal/upload_normal_directory.html', title='Upload Normal file', form=form, path=path)
 
@@ -68,11 +73,11 @@ def upload_group_directory(path):
 def deleteFile(id):
     f = File.query.filter_by(id=id).one()
     print(f.parent.name)
-    db.session.delete(f)
-    db.session.commit()
     filePath = returnPathOfFile(id)
+    db.session.delete(f)
     os.remove(filePath)
-    flash(f.name + " has been delete correctly")
+    db.session.commit()
+    flash(f.name + " has been deleted correctly")
     return redirect(url_for("currentPath", path=f.parent.name))
 
 
@@ -85,8 +90,9 @@ def deleteFolder(id):
     for subf in f.subFiles:
         deleteFile(subf.id)
     folderPath = returnPathOfFolder(id)
+    print(folderPath)
     os.rmdir(folderPath)
     db.session.delete(f)
     db.session.commit()
-    flash(f.name + " has been delete correctly")
+    flash(f.name + " has been deleted correctly")
     return redirect(url_for("currentPath", path=f.parent.name))

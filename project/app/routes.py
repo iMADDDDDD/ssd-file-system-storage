@@ -90,33 +90,35 @@ def users():
 def currentPath(path):
     form = CreateFolder()
     user = User.query.get(current_user.id)
-    files = deepcopy(user.files)
     indexToSuppress = []
     currentFolder = Folder.query.filter_by(name=path).first()
+    currentFiles = []
     for i in range(len(user.files)):
         f = user.files[i]
+        currentFiles.append(f)
         if f.parent.name != path:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
-        files.pop(indexToSuppress[i] - i)
-    folders = deepcopy(user.folders)
+        currentFiles.pop(indexToSuppress[i] - i)
     indexToSuppress = []
+    currentFolders = []
     for i in range(len(user.folders)):
         f = user.folders[i]
+        currentFolders.append(f)
         if f.parent.name != path:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
-        folders.pop(indexToSuppress[i] - i)
+        currentFolders.pop(indexToSuppress[i] - i)
     if form.validate_on_submit():
-        dirName = os.path.abspath(currentFolder.name) + "/" + form.folderName.name
+        dirName = returnPathOfFolder(currentFolder.id) + "/" + form.folderName.data
         if not os.path.exists(dirName):
             os.mkdir(dirName)
-            flash("Directory " , dirName ,  " Created ")
+            flash("Directory " + form.folderName.data +  " Created ")
         else:
-            flash("Directory " , dirName ,  " already exists")
+            flash("Directory " + form.folderName.data +  " already exists")
         newFolder = Folder(name=form.folderName.data, parent=currentFolder)
         newFolder.AccessFolder.append(user)
         db.session.add(newFolder)
         db.session.commit()
         return redirect(url_for("currentPath", title="Home", path=currentFolder.name))
-    return render_template('home/home.html', title="Home", user=user, files=files, folders=folders, form=form, parent=currentFolder.parent, path=path)
+    return render_template('home/home.html', title="Home", user=user, files=currentFiles, folders=currentFolders, form=form, parent=currentFolder.parent, path=path)
