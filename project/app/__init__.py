@@ -29,6 +29,8 @@ from app.authentication import bp as authentication_bp
 app.register_blueprint(authentication_bp)
 from app.fileModification import bp as fileModification_bp
 app.register_blueprint(fileModification_bp)
+from app.fileDownload import bp as fileDownload_bp
+app.register_blueprint(fileDownload_bp)
 
 from app import routes, models
 
@@ -49,3 +51,7 @@ if not app.debug:
             credentials=auth, secure=secure)
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
+
+if __name__ == "__main__":
+	app.run(ssl_context=('cert.pem', 'key.pem'))
+

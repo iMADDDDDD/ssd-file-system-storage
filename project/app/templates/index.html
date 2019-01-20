@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
 
+
 {% block content %}
     <h1>Hi, {{ user.username }}!</h1>
     <div id="button_wrapper">
-        <a href="{{ url_for('upload', path=path }}" >
+        <a href="{{ url_for('upload') }}" >
             <div id="button_upload" >
                 Upload <span class="fa fa-arrow-up"></span>
             </div>
@@ -21,7 +22,6 @@
             </p>
             <p>{{ form.submit() }}</p>
     </form>
- <button type="button">Click Me!</button> 
     <table class="table table-dark" >
             <thead>
               <tr>
@@ -32,14 +32,6 @@
               </tr>
             </thead>
     <tbody>
-        {% if parent %}
-            <tr>
-                <td></td>
-                <td><a href="{{ url_for('index') }}/{{ parent.name }}">...</a></td>
-                <td></td>
-                <td style="text-align: center"></td>
-            </tr>
-        {% endif %}
         {% if files or folders %}
             {% if folders %}
                 {% for folder in folders %}
@@ -47,7 +39,7 @@
                         <td><span class="fa fa-folder"></span></td>
                         <td><a href="{{ url_for('index') }}/{{ folder.name }}">{{ folder.name }}</a></td>
                         <td>{{ folder.creationDate.strftime('%d-%m-%Y') }}</td>
-                        <td style="text-align: center"><a href="{{ url_for('deleteFolder', id=folder.id) }}"><span class="fa fa-trash"></span></a><a href="{{ url_for('downloadFile', itemID=folder.id)}}" target="_blank"><span class="fa fa-download"></span></a></td>
+                        <td style="text-align: center"><a href="{{ url_for('deleteFolder', id=folder.id) }}"><span class="fa fa-trash"></span></a></td>
                     </tr>
                 {% endfor %}
             {% endif %}
@@ -57,13 +49,13 @@
                         <td><span class="fa fa-file"></span></td>
                         <td>{{ file.name }}</td>
                         <td>{{ file.creationDate.strftime('%d-%m-%Y') }}</td>
-                        <td style="text-align: center"><a href="{{ url_for('deleteFile', id=file.id) }}"><span class="fa fa-trash"></span></a><a href="{{ url_for('downloadFile', itemID=file.id)}}" target="_blank"><span class="fa fa-download"></span></a></td>
+                        <td style="text-align: center"><a href="{{ url_for('deleteFile', id=file.id) }}"><span class="fa fa-trash"></span></a></td>
                     </tr>
                 {% endfor %}
             {% endif %}
 
         {% else %}
-        
+
         <tr id="table_empty_row" style="background: none; border:0px;">
             <td></td>
             <td>Empty directory</td>

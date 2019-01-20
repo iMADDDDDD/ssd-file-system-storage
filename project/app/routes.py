@@ -1,7 +1,8 @@
 import os
+import sys
 
 from app import app, db
-from app.models import User, File, Folder
+from app.models import User, File, Folder, Role
 from app.email import send_password_reset_email
 from app.forms import CreateFolder
 from flask import render_template, redirect, url_for, flash, request, session
@@ -13,13 +14,27 @@ from uuid import uuid4
 
 app.permanent_session_lifetime = timedelta(minutes=5)
 
-
 @app.route('/')
 @app.route('/index', methods=['POST', 'GET'])
 @login_required
 def index():
+    user = User.query.get(current_user.id)
+    role = user.role
+
+    if role == Role.admin:
+        return redirect(url_for("admin"))
     return redirect(url_for("currentPath", path="Files"))
 
+
+@app.route('/a/index')
+def admin():
+
+    admin = current_user
+    users = User.query.all()
+    files = File.query.all()
+    folders = Folder.query.all()
+
+    return render_template('a/index.html', title="Administration control panel", admin=admin, users=users, files=files, folders=folders)
 
 @app.route('/index/<path>', methods=['POST', 'GET'])
 @login_required

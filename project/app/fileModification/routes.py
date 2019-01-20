@@ -51,7 +51,7 @@ def uploader():
         return render_template('authenticated/upload.html')
 
 
-@app.route('/deleter/file/<id>', methods=['POST', 'GET'])
+@app.route('/deleter/file/<id>', methods=['GET', 'POST'])
 @login_required
 def deleteFile(id):
     f = File.query.filter_by(id=id).one()
@@ -61,7 +61,7 @@ def deleteFile(id):
     return redirect(url_for("currentPath", path=f.parent.name))
 
 
-@app.route('/deleter/folder/<id>', methods=['POST', 'GET'])
+@app.route('/deleter/folder/<id>', methods=['GET', 'POST'])
 @login_required
 def deleteFolder(id):
     f = Folder.query.filter_by(id=id).one()

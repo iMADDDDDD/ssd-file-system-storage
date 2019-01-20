@@ -5,9 +5,17 @@
     <div style="display:flex">
             <div style="width:100%">
                 <div id="group_file">
+                    File
                     <ul>
-                        <li><a href="{{ url_for('upload_group') }}">Upload Group File</a></li>
-                        <li><a href="{{ url_for('upload_normal') }}">Upload Normal File</a></li>
+                        <li><a href="{{ url_for('upload_normal_file', path=path) }}">Upload Normal File</a></li>
+                        <li><a href="{{ url_for('upload_group_file', path=path) }}">Upload Group File</a></li>
+                    </ul>
+                </div>
+                <div id="group_file">
+                    Directory
+                    <ul>
+                        <li><a href="{{ url_for('upload_normal_directory', path=path) }}">Upload Normal Directory</a></li>
+                        <li><a href="{{ url_for('upload_group_directory', path=path) }}">Upload Group Directory</a></li>
                     </ul>
                 </div>
             </div>
