@@ -35,6 +35,8 @@ class User(UserMixin, db.Model):
     logs = db.relationship('Log', backref='user', lazy='dynamic')
     confirmed = db.Column(db.Boolean)
     otp_secret = db.Column(db.String(16))
+    activated = db.Column(db.Boolean)
+    
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
