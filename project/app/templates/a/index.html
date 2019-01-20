@@ -1,6 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Administration control panel - Connected as {{ current_user.username }}</h1>  
+  <h2>Administration control panel - Connected as {{ current_user.username }}</h2>
+
+  <h1><u>Locked accounts</u></h1>
+  {% if not locked_users %}
+    <p>No locked accounts yet.</p>
+  {% else %}
+    <ul>
+      {% for locked_user in locked_users %}
+      <li><a href="{{ url_for('profile', id=locked_user.id) }}">{{ locked_user.username }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <h1><u>Non-activated accounts</u></h1>
+  {% if not non_activated_users %}
+    <p>No accounts needed for activation yet.</p>
+  {% else %}
+    <ul>
+      {% for non_activated_user in non_activated_users %}
+      <li><a href="{{ url_for('profile', id=non_activated_user.id) }}">{{ non_activated_user.username }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <a href="{{ url_for('users')}}" class="button primary small">View all users</a></li>
 
 {% endblock %}

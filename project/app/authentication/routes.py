@@ -31,7 +31,7 @@ def login():
             return redirect(url_for('login'))
         if not user.check_password(form.password.data):
             user.failedLogin += 1
-            if user.failedLogin == 3:
+            if user.failedLogin >= 3:
                 user.locked = True
             db.session.add(user)
             db.session.commit()
@@ -39,12 +39,15 @@ def login():
             return redirect(url_for('login'))
         if not user.verify_totp(form.token.data):
             user.failedLogin += 1
-            if user.failedLogin == 3:
+            if user.failedLogin >= 3:
                 user.locked = True
             db.session.add(user)
             db.session.commit(user)
             flash('Invalid token')
             return redirect(url_for('login'))
+        user.failedLogin = 0
+        db.session.add(user)
+        db.session.commit()
         login_user(user, remember=form.remember_me.data)
         session['logged_in'] = True
         session['number'] = str(uuid4())
@@ -70,6 +73,8 @@ def register():
         user = User(username=form.username.data,
                     email=form.email.data, confirmed=False)
         user.set_password(form.password.data)
+        user.activated = False
+        user.locked = False
         db.session.add(user)
         db.session.commit()
 

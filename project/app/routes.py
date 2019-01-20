@@ -1,6 +1,7 @@
 import os
 import sys
-
+from copy import deepcopy
+from app.functions.path import returnPathOfFile, returnPathOfFolder
 from app import app, db
 from app.models import User, File, Folder, Role
 from app.email import send_password_reset_email
@@ -25,48 +26,94 @@ def index():
         return redirect(url_for("admin"))
     return redirect(url_for("currentPath", path="Files"))
 
+@app.route('/a/profile/<id>')
+@login_required
+def profile(id):
+    user = User.query.filter_by(id=id).first()
+    files = user.files
+    folders = user.folders
+    return render_template('/a/profile.html', title="Administration control panel", user=user, files=files, folders=folders)
+
+
+@app.route('/a/unlock_user/<id>')
+@login_required
+def unlock_user(id):
+    user = User.query.filter_by(id=id).first()
+    user.locked = False
+    db.session.add(user)
+    db.session.commit()
+    flash('User has been unlocked')
+    return redirect(url_for("profile", id=user.id))
+
+@app.route('/a/activate_user/<id>')
+@login_required
+def activate_user(id):
+    user = User.query.filter_by(id=id).first()
+    user.activated = True
+    db.session.add(user)
+    db.session.commit()
+    flash('User account has been activated')
+    return redirect(url_for("profile", id=user.id))
+
+@app.route('/a/deactivate_user/<id>')
+@login_required
+def deactivate_user(id):
+    user = User.query.filter_by(id=id).first()
+    user.activated = False
+    db.session.add(user)
+    db.session.commit()
+    flash('User account has been deactivated')
+    return redirect(url_for("profile", id=user.id))
+
 
 @app.route('/a/index')
+@login_required
 def admin():
-
     admin = current_user
-    users = User.query.all()
+    locked_users = User.query.filter_by(locked=True).all()
+    non_activated_users = User.query.filter_by(activated=False).all()
+
+    return render_template('/a/index.html', title="Administration control panel", admin=admin, locked_users=locked_users,
+    non_activated_users=non_activated_users)
+
+@app.route('/a/users')
+@login_required
+def users():
+    users = User.query.order_by(User.id).all()
     files = File.query.all()
     folders = Folder.query.all()
 
-    return render_template('a/index.html', title="Administration control panel", admin=admin, users=users, files=files, folders=folders)
+    return render_template('/a/users.html', users=users, files=files, folders=folders)
 
 @app.route('/index/<path>', methods=['POST', 'GET'])
 @login_required
 def currentPath(path):
     form = CreateFolder()
     user = User.query.get(current_user.id)
-    files = user.files
+    files = deepcopy(user.files)
     indexToSuppress = []
     currentFolder = Folder.query.filter_by(name=path).first()
-    for i in range(len(files)):
-        f = files[i]
+    for i in range(len(user.files)):
+        f = user.files[i]
         if f.parent.name != path:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
         files.pop(indexToSuppress[i] - i)
-    folders = user.folders
+    folders = deepcopy(user.folders)
     indexToSuppress = []
-    for i in range(len(folders)):
-        f = folders[i]
+    for i in range(len(user.folders)):
+        f = user.folders[i]
         if f.parent.name != path:
             indexToSuppress.append(i)
     for i in range(len(indexToSuppress)):
         folders.pop(indexToSuppress[i] - i)
     if form.validate_on_submit():
-        dirName = form.folderName.data
-        # TODO use the function to get the absolute path
+        dirName = os.path.abspath(currentFolder.name) + "/" + form.folderName.name
         if not os.path.exists(dirName):
             os.mkdir(dirName)
-            flash("Directory " + form.folderName.data + " Created ")
+            flash("Directory " , dirName ,  " Created ")
         else:
-            flash("Directory " + form.folderName.data + " already exists")
-            return redirect(url_for("currentPath", title="Home", path=currentFolder.name))
+            flash("Directory " , dirName ,  " already exists")
         newFolder = Folder(name=form.folderName.data, parent=currentFolder)
         newFolder.AccessFolder.append(user)
         db.session.add(newFolder)
