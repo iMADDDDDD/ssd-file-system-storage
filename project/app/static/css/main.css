@@ -89,6 +89,15 @@ input, select, textarea {
 	background-color: none !important;
 }
 
+.padding{
+	padding:3px;
+}
+
+
+
+.fa:hover{
+	color: rgba(255, 255, 255, 0.75);
+}
 /* Basic */
 
 	@-ms-viewport {
@@ -3992,4 +4001,13 @@ input, select, textarea {
 
 	body.is-mobile.landing #footer {
 		background-color: #1d242a;
+	}
+
+	.noDecoration, a:link, a:visited {
+		text-decoration: none !important;
+		border-bottom: 0px;
+	}
+
+	.icon-wrapper{
+		margin-left:10px
 	}
