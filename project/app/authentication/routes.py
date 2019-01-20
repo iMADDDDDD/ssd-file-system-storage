@@ -27,12 +27,12 @@ def login():
         if not user.confirmed:
             flash('Confirm your account before logging in')
             return redirect(url_for('login'))
-        if not user.locked:
+        if user.locked:
             flash("Your account has been locked.\n Please wait for the asministrator to unlock your account")
             return redirect(url_for('login'))
         if not user.check_password(form.password.data):
             user.failedLogin += 1
-            if user.failedLogin == 3:
+            if user.failedLogin >= 3:
                 user.locked = True
             db.session.add(user)
             db.session.commit()
@@ -40,12 +40,15 @@ def login():
             return redirect(url_for('login'))
         if not user.verify_totp(form.token.data):
             user.failedLogin += 1
-            if user.failedLogin == 3:
+            if user.failedLogin >= 3:
                 user.locked = True
             db.session.add(user)
             db.session.commit(user)
             flash('Invalid token')
             return redirect(url_for('login'))
+        user.failedLogin = 0
+        db.session.add(user)
+        db.session.commit()
         login_user(user, remember=form.remember_me.data)
         session['logged_in'] = True
         session['number'] = str(uuid4())

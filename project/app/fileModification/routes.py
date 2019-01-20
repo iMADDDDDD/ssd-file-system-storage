@@ -11,6 +11,8 @@ from werkzeug.urls import url_parse
 from datetime import timedelta
 from uuid import uuid4
 from app.routes import currentPath
+from app.functions.path import returnPathOfFile, returnPathOfFolder
+import shutil
 
 app.permanent_session_lifetime = timedelta(minutes=5)
 
@@ -57,6 +59,8 @@ def deleteFile(id):
     f = File.query.filter_by(id=id).one()
     db.session.delete(f)
     db.session.commit()
+    filePath = returnPathOfFile(id) + "/" + f.name
+    os.remove(filePath)
     flash(f.name + " has been delete correctly")
     return redirect(url_for("currentPath", path=f.parent.name))
 
@@ -66,6 +70,12 @@ def deleteFile(id):
 def deleteFolder(id):
     f = Folder.query.filter_by(id=id).one()
     db.session.delete(f)
+    for subf in f.subFolders:
+        deleteFolder(subf.id)
+    for subf in f.subFiles:
+        deleteFile(subf.id)
+    folderPath = returnPathOfFolder(id) + "/" + f.name
+    os.rmdir(folderPath)
     db.session.commit()
     flash(f.name + " has been delete correctly")
     return redirect(url_for("currentPath", path=f.parent.name))

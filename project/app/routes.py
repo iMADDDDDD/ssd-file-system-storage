@@ -1,6 +1,6 @@
 import os
 import sys
-
+from app.functions.path import returnPathOfFile, returnPathOfFolder
 from app import app, db
 from app.models import User, File, Folder, Role
 from app.email import send_password_reset_email
@@ -59,8 +59,7 @@ def currentPath(path):
     for i in range(len(indexToSuppress)):
         folders.pop(indexToSuppress[i] - i)
     if form.validate_on_submit():
-        dirName = form.folderName.data
-        # TODO use the function to get the absolute path
+        dirName = returnPathOfFolder(currentFolder.id) + "/" + form.folderName.data
         if not os.path.exists(dirName):
             os.mkdir(dirName)
             flash("Directory " + form.folderName.data + " Created ")
@@ -68,7 +67,7 @@ def currentPath(path):
             flash("Directory " + form.folderName.data + " already exists")
             return redirect(url_for("currentPath", title="Home", path=currentFolder.name))
         newFolder = Folder(name=form.folderName.data, parent=currentFolder)
-        newFolder.AccessFolder.append(user)
+        newFolder.AccessFolder.append()
         db.session.add(newFolder)
         db.session.commit()
         return redirect(url_for("currentPath", title="Home", path=currentFolder.name))
