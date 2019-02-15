@@ -19,6 +19,9 @@ pip install pysftp
 pip install pytransmit
 pip install flask_uploads
 
+To delete the existing database
+rm -rf app.db migrations/
+
 To create the database
 flask db init
 flask db migrate -m "Nom de la migration"
@@ -26,6 +29,7 @@ flask db upgrade
 
 
 To set up the database correctly
+export FLASK_APP=microblog.py
 flask shell 
 This will open a python console copy/paste the rest of the lines to add a first repository that will contain all the files
 db.session.add(Folder(name="Files"))
