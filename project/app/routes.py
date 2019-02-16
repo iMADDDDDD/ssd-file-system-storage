@@ -28,22 +28,22 @@ def index():
 @app.route('/a/profile/<id>')
 @login_required
 def profile(id):
+    role = current_user.role
+    if role != Role.admin:
+        return redirect(url_for("index"))
     user = User.query.filter_by(id=id).first()
     files = user.files
     folders = user.folders
-    role = user.role
-    if role != Role.admin:
-        return redirect(url_for("index"))
     return render_template('/a/profile.html', title="Administration control panel", user=user, files=files, folders=folders)
 
 
 @app.route('/a/unlock_user/<id>')
 @login_required
 def unlock_user(id):
-    user = User.query.filter_by(id=id).first()
-    role = user.role
+    role = current_user.role
     if role != Role.admin:
         return redirect(url_for("index"))
+    user = User.query.filter_by(id=id).first()
 
     user.locked = False
     db.session.add(user)
@@ -54,10 +54,10 @@ def unlock_user(id):
 @app.route('/a/activate_user/<id>')
 @login_required
 def activate_user(id):
-    user = User.query.filter_by(id=id).first()
-    role = user.role
+    role = current_user.role
     if role != Role.admin:
         return redirect(url_for("index"))
+    user = User.query.filter_by(id=id).first()
 
     user.activated = True
     db.session.add(user)
@@ -68,10 +68,10 @@ def activate_user(id):
 @app.route('/a/deactivate_user/<id>')
 @login_required
 def deactivate_user(id):
-    user = User.query.filter_by(id=id).first()
-    role = user.role
+    role = current_user.role
     if role != Role.admin:
         return redirect(url_for("index"))
+    user = User.query.filter_by(id=id).first()
 
     user.activated = False
     db.session.add(user)
@@ -81,7 +81,6 @@ def deactivate_user(id):
 
 
 @app.route('/a/index')
-@login_required
 def admin():
     role = current_user.role
     if role != Role.admin:
