@@ -19,6 +19,10 @@ pip install pysftp
 pip install pytransmit
 pip install flask_uploads
 
+install postgresql on ubuntu 18
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+
 To delete the existing database
 rm -rf app.db migrations/
 
@@ -38,6 +42,7 @@ exit()
 
 To execute the application
 flask run --cert app/cert.pem --key app/key.pem
+NB: We recommend to use Firefox and access https://127.0.0.1:5000 . Then add the certificate and you will be able to connect to our website.
 
 To change the role of the user you have just created to administrator
 flask shell
