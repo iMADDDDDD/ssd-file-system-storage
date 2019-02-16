@@ -51,9 +51,9 @@ def recAddToZip(zipFile, itemId):
    for f in files:
       if current_user in f.AccessFile and f.AccessFile.count() == 1:
          path = returnPathOfFolder(itemId)
-         with open(os.path.join(path,f.name), 'rb') as f:
-            data = f.read()
-         fernet = Fernet(app.config["EKEY"])
+         with open(os.path.join(path,f.name), 'rb') as fo:
+            data = fo.read()
+         fernet = Fernet(f.encryptionKey)
          decrypted = fernet.decrypt(data)
          
          zipFile.writestr(f.name, decrypted, compress_type=zipFile.compression)
